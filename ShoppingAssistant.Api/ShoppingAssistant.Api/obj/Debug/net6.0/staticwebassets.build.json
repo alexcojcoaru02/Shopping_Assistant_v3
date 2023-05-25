@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "GTZIc7t0e+y1vwQ5fYbV2DUIHxj/qWylJrodxVe7dd0=",
+  "Source": "ShoppingAssistant.Api",
+  "BasePath": "_content/ShoppingAssistant.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

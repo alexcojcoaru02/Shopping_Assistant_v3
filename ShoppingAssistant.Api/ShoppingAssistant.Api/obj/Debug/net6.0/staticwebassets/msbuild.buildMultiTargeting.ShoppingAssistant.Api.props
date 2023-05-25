@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ShoppingAssistant.Api.props" />
+</Project>
