@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:shopping_assistant/services/product_service.dart';
 
 class ScanBarcode extends StatelessWidget {
   const ScanBarcode({super.key});
@@ -27,7 +28,9 @@ class ScanBarcode extends StatelessWidget {
     );
   }
 }
-Future<void> scanBarcode() async {
+Future<void> scanBarcode() async {  
+  final productService = ProductService();
+
   String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
     "#ff6666",
     "Cancel",
@@ -37,6 +40,16 @@ Future<void> scanBarcode() async {
 
   if (barcodeScanRes != '-1') {
     print('Barcode scanned: $barcodeScanRes');
+
+    productService.getProductByBarcode(barcodeScanRes)
+    .then((product) {
+      // Handle the product response
+      print('Product: ${product.name}, Barcode: ${product.barcode}');
+    })
+    .catchError((error) {
+      // Handle any errors that occur
+      print('Error: $error');
+    });
   } else {
     print('User cancelled the scan');
   }

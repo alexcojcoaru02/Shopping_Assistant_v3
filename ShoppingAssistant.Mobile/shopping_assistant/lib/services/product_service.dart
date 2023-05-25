@@ -17,13 +17,25 @@ class ProductService {
     }
   }
 
-  Future<Product> getProduct(int id) async {
+  Future<Product> getProduct(String id) async {
     final response = await http.get(Uri.parse('$_baseUrl/$id'));
     if (response.statusCode == 200) {
       final productJson = jsonDecode(response.body) as Map<String, dynamic>;
       return Product.fromJson(productJson);
     } else {
       throw Exception('Failed to load product with id=$id');
+    }
+  }
+
+  
+
+  Future<Product> getProductByBarcode(String barcode) async {
+    final response = await http.get(Uri.parse('$_baseUrl/$barcode'));
+    if (response.statusCode == 200) {
+      final productJson = jsonDecode(response.body) as Map<String, dynamic>;
+      return Product.fromJson(productJson);
+    } else {
+      throw Exception('Failed to load product with barcode=$barcode');
     }
   }
 }

@@ -31,6 +31,16 @@ namespace ShoppingAssistant.Api.Controllers
             return product == null ? NotFound() : Ok(product);
         }
 
+        [HttpGet("barcode")]
+        public async Task<IActionResult> GetByBarcode(string barcode)
+        {
+            var productService = new ProductService();
+
+            var product = await productService.GetProductByBarcode(barcode);
+
+            return product == null ? NotFound() : Ok(product);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(Product product)
         {
