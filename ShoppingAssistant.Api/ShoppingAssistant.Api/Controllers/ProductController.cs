@@ -25,7 +25,7 @@ namespace ShoppingAssistant.Api.Controllers
         {
             var productService = new ProductService();
 
-            var product = productService.GetProductAsync(id);
+            var product = await productService.GetProductAsync(id);
 
             return product == null ? NotFound() : Ok(product);
         }
@@ -35,7 +35,7 @@ namespace ShoppingAssistant.Api.Controllers
         {
             var productService = new ProductService();
 
-            productService.AddProduct(product);
+            await productService.AddProduct(product);
 
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }

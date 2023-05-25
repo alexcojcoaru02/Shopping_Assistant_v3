@@ -43,9 +43,11 @@ C:\Users\Alex Cojocaru\Desktop\Facultate\Licenta\Shopping Assistant v1\ShoppingA
 C:\Users\Alex Cojocaru\Desktop\Facultate\Licenta\Shopping Assistant v1\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.pdb
 C:\Users\Alex Cojocaru\Desktop\Facultate\Licenta\Shopping Assistant v1\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.genruntimeconfig.cache
 C:\Users\Alex Cojocaru\Desktop\Facultate\Licenta\Shopping Assistant v1\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ref\ShoppingAssistant.Api.dll
-C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\appsettings.json
+C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\runtimes\linux\native\libmongocrypt.so
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\appsettings.Development.json
+C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\appsettings.json
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Api.exe
+C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\mongocrypt.dll
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Api.deps.json
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Api.runtimeconfig.json
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Api.dll
@@ -64,14 +66,17 @@ C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ZstdSharp.dll
-C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\runtimes\linux\native\libmongocrypt.so
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\runtimes\osx\native\libmongocrypt.dylib
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\runtimes\win\native\mongocrypt.dll
+C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Core.dll
+C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Core.pdb
+C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Core.dll.config
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.csproj.AssemblyReference.cache
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.AssemblyInfoInputs.cache
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.AssemblyInfo.cs
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.csproj.CoreCompileInputs.cache
+C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\staticwebassets\msbuild.ShoppingAssistant.Api.Microsoft.AspNetCore.StaticWebAssets.props
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\staticwebassets\msbuild.build.ShoppingAssistant.Api.props
@@ -87,7 +92,3 @@ C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.pdb
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ShoppingAssistant.Api.genruntimeconfig.cache
 C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\obj\Debug\net6.0\ref\ShoppingAssistant.Api.dll
-C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\mongocrypt.dll
-C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Core.dll
-C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Core.pdb
-C:\Users\Alex Cojocaru\source\repos\Shopping_Assistant_v3\ShoppingAssistant.Api\ShoppingAssistant.Api\bin\Debug\net6.0\ShoppingAssistant.Core.dll.config

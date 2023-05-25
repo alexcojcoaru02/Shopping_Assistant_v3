@@ -28,7 +28,11 @@
         "frameworks": {
           "net6.0": {
             "targetAlias": "net6.0",
-            "projectReferences": {}
+            "projectReferences": {
+              "C:\\Users\\Alex Cojocaru\\source\\repos\\Shopping_Assistant_v3\\ShoppingAssistant.Api\\ShoppingAssistant.Core\\ShoppingAssistant.Core.csproj": {
+                "projectPath": "C:\\Users\\Alex Cojocaru\\source\\repos\\Shopping_Assistant_v3\\ShoppingAssistant.Api\\ShoppingAssistant.Core\\ShoppingAssistant.Core.csproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -71,6 +75,21 @@
           },
           "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.302\\RuntimeIdentifierGraph.json"
         }
+      }
+    },
+    "C:\\Users\\Alex Cojocaru\\source\\repos\\Shopping_Assistant_v3\\ShoppingAssistant.Api\\ShoppingAssistant.Core\\ShoppingAssistant.Core.csproj": {
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Alex Cojocaru\\source\\repos\\Shopping_Assistant_v3\\ShoppingAssistant.Api\\ShoppingAssistant.Core\\ShoppingAssistant.Core.csproj",
+        "projectName": "ShoppingAssistant.Core",
+        "projectPath": "C:\\Users\\Alex Cojocaru\\source\\repos\\Shopping_Assistant_v3\\ShoppingAssistant.Api\\ShoppingAssistant.Core\\ShoppingAssistant.Core.csproj",
+        "frameworks": {
+          "net472": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {}
       }
     }
   }

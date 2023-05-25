@@ -21,8 +21,8 @@ namespace ShoppingAssistant.Core.Services
             productsCollection = database.GetCollection<Product>(CollectionName);
         }
 
-        public async Task<List<Product>> GetAllProductsAsync()
-            => (await productsCollection.FindAsync(_ => true)).ToList();
+        public async Task<IEnumerable<Product>> GetAllProductsAsync()
+            => (await productsCollection.FindAsync(_ => true)).ToEnumerable();
 
         public async Task AddProduct(Product product)
             => await productsCollection.InsertOneAsync(product);

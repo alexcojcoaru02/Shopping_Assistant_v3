@@ -403,6 +403,9 @@ FodyWeavers.xsd
 ##
 ## Visual studio for Mac
 ##
+project.nuget.cache/
+project.nuget.g.props
+dtbchachev2/
 
 
 # globs

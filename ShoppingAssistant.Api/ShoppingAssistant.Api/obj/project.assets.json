@@ -369,6 +369,15 @@
         "runtime": {
           "lib/net6.0/ZstdSharp.dll": {}
         }
+      },
+      "ShoppingAssistant.Core/1.0.0": {
+        "type": "project",
+        "compile": {
+          "bin/placeholder/ShoppingAssistant.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ShoppingAssistant.Core.dll": {}
+        }
       }
     }
   },
@@ -955,11 +964,17 @@
         "zstdsharp.port.0.6.2.nupkg.sha512",
         "zstdsharp.port.nuspec"
       ]
+    },
+    "ShoppingAssistant.Core/1.0.0": {
+      "type": "project",
+      "path": "../ShoppingAssistant.Core/ShoppingAssistant.Core.csproj",
+      "msbuildProject": "../ShoppingAssistant.Core/ShoppingAssistant.Core.csproj"
     }
   },
   "projectFileDependencyGroups": {
     "net6.0": [
       "MongoDB.Driver >= 2.19.1",
+      "ShoppingAssistant.Core >= 1.0.0",
       "Swashbuckle.AspNetCore >= 6.2.3"
     ]
   },
@@ -990,7 +1005,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Alex Cojocaru\\source\\repos\\Shopping_Assistant_v3\\ShoppingAssistant.Api\\ShoppingAssistant.Core\\ShoppingAssistant.Core.csproj": {
+              "projectPath": "C:\\Users\\Alex Cojocaru\\source\\repos\\Shopping_Assistant_v3\\ShoppingAssistant.Api\\ShoppingAssistant.Core\\ShoppingAssistant.Core.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
