@@ -9,6 +9,7 @@
       "ShoppingAssistant.Api/1.0.0": {
         "dependencies": {
           "MongoDB.Driver": "2.19.1",
+          "ShoppingAssistant.Core": "1.0.0",
           "Swashbuckle.AspNetCore": "6.2.3"
         },
         "runtime": {
@@ -201,6 +202,11 @@
             "fileVersion": "0.6.2.0"
           }
         }
+      },
+      "ShoppingAssistant.Core/1.0.0": {
+        "runtime": {
+          "ShoppingAssistant.Core.dll": {}
+        }
       }
     }
   },
@@ -370,6 +376,11 @@
       "sha512": "sha512-jPao/LdUNLUz8rn3H1D8W7wQbZsRZM0iayvWI4xGejJg3XJHT56gcmYdgmCGPdJF1UEBqUjucCRrFB+4HbJsbw==",
       "path": "zstdsharp.port/0.6.2",
       "hashPath": "zstdsharp.port.0.6.2.nupkg.sha512"
+    },
+    "ShoppingAssistant.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

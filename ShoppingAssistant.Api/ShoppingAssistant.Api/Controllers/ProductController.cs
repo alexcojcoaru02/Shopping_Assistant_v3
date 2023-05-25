@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ShoppingAssistant.Api.Models;
-using ShoppingAssistant.Api.Services;
+using ShoppingAssistant.Core.Models;
+using ShoppingAssistant.Core.Services;
 
 namespace ShoppingAssistant.Api.Controllers
 {
