@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:shopping_assistant/pages/scan_barcode.dart';
 
+import '../services/product_service.dart';
 import '../utils/configuration.dart';
 
 class ExplorePage extends StatefulWidget {
@@ -91,12 +93,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     GestureDetector(
                       child: const Icon(Icons.camera), 
                       onTap: () {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ScanBarcode(),
-                        ),
-                      );
+                      scanBarcode();
                     })
                   ],
                 ),
@@ -155,7 +152,7 @@ class _ExplorePageState extends State<ExplorePage> {
                               child: Hero(
                                   tag: 1,
                                   child: Image.asset(
-                                      'assets/images/products/iphone-14-pro.png')),
+                                      'assets/images/products/cp_calcidin600.png')),
                             )
                           ],
                         ),
@@ -218,5 +215,32 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
       ),
     );
+  }
+}
+
+Future<void> scanBarcode() async {  
+  final productService = ProductService();
+
+  String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+    "#ff6666",
+    "Cancel",
+    true,
+    ScanMode.DEFAULT,
+  );
+
+  if (barcodeScanRes != '-1') {
+    print('Barcode scanned: $barcodeScanRes');
+
+    productService.getProductByBarcode(barcodeScanRes)
+    .then((product) {
+      // Handle the product response
+      print('Product: ${product.name}, Barcode: ${product.barcode}');
+    })
+    .catchError((error) {
+      // Handle any errors that occur
+      print('Error: $error');
+    });
+  } else {
+    print('User cancelled the scan');
   }
 }

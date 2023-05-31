@@ -6,7 +6,7 @@ namespace ShoppingAssistant.Api.Services
 {
     public class ProductService
     {
-        private const string ConnectionString = "mongodb://localhost:27017";
+        private const string ConnectionString = "mongodb://alex-shoping-assitant:y8czsQg2fOQKUKwBzpDzQ2KKL7dlrDQtCMoNpBjQLiwkm4zVGSVrRv1ekdpf98YONtXgO3cL05ZkACDbAsP6TQ==@alex-shoping-assitant.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@alex-shoping-assitant@";
         private const string DBName = "SATest";
         private const string CollectionName = "products";
         private IMongoCollection<Product> productsCollection;

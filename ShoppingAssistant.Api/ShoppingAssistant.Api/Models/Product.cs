@@ -17,15 +17,16 @@ namespace ShoppingAssistant.Api.Models
 
         public ProductCategory Category { get; set; }
 
-        public double Price { get; set; }
-
         public string ImageUrl { get; set; }
 
-        public int StockQuantity { get; set; }
+        public List<PriceHistory> PriceHistory { get; set; }
+    }
 
-        public int StoreId { get; set; }
-
-        public List<double> PriceHistory { get; set; }
+    public class PriceHistory
+    {
+        public double Price { get; set; }
+        public string StoreId { get; set; }
+        public DateTime DateTime { get; set; }
     }
 
     public enum ProductCategory

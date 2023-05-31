@@ -17,18 +17,20 @@ class Product {
     this.imageUrl,
     this.stockQuantity,
     this.storeId,
-  );  
+  );
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
       json['name'],
       json['barcode'],
       json['description'],
-      ProductCategory.values.firstWhere((e) => e.toString() == 'ProductCategory.' + json['category']),
+      ProductCategory.values.firstWhere(
+          (e) => e.toString() == 'ProductCategory.' + json['category']),
       json['price'],
       json['imageUrl'],
       json['stockQuantity'],
-      json['storeId'],);
+      json['storeId'],
+    );
   }
 
   Map<String, dynamic> toJson() {

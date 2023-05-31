@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import '../models/product.dart';
 
 class ProductService {
-  static const _baseUrl = 'https://example.com/api/products';
+  final _baseUrl = 'https://alex-shopping-assistant.azurewebsites.net/api/product';
 
   Future<List<Product>> getAllProducts() async {
     final response = await http.get(Uri.parse(_baseUrl));
@@ -30,7 +30,7 @@ class ProductService {
   
 
   Future<Product> getProductByBarcode(String barcode) async {
-    final response = await http.get(Uri.parse('$_baseUrl/$barcode'));
+    final response = await http.get(Uri.parse('$_baseUrl/barcode?barcode=$barcode'));
     if (response.statusCode == 200) {
       final productJson = jsonDecode(response.body) as Map<String, dynamic>;
       return Product.fromJson(productJson);
