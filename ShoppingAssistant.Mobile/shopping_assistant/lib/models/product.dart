@@ -1,49 +1,56 @@
 class Product {
+  String id;
   String name;
   String barcode;
   String description;
   ProductCategory category;
-  double price;
   String imageUrl;
-  int stockQuantity;
-  int storeId;
+  List<PriceHistory> priceHistory;
 
   Product(
+    this.id,
     this.name,
     this.barcode,
     this.description,
     this.category,
-    this.price,
     this.imageUrl,
-    this.stockQuantity,
-    this.storeId,
+    this.priceHistory,
   );
 
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      json['name'],
-      json['barcode'],
-      json['description'],
-      ProductCategory.values.firstWhere(
-          (e) => e.toString() == 'ProductCategory.' + json['category']),
-      json['price'],
-      json['imageUrl'],
-      json['stockQuantity'],
-      json['storeId'],
-    );
-  }
+  Product.fromJson(Map<String, dynamic> json)
+      : id = json['id'] as String,  
+        name = json['name'] as String,
+        barcode = json['barcode'] as String,
+        description = json['description'] as String,
+        category = getCategoryFromInt(json['category'] as int),
+        imageUrl = json['imageUrl'] as String,
+        priceHistory = (json['priceHistory'] as List<dynamic>)
+            .map((e) => PriceHistory.fromJson(e as Map<String, dynamic>))
+            .toList();
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'barcode': barcode,
-      'description': description,
-      'category': category.toString().split('.').last,
-      'price': price,
-      'imageUrl': imageUrl,
-      'stockQuantity': stockQuantity,
-      'storeId': storeId,
-    };
+class PriceHistory {
+  double price;
+  String storeId;
+  DateTime dateTime;
+
+  PriceHistory(
+    this.price,
+    this.storeId,
+    this.dateTime,
+  );
+
+  PriceHistory.fromJson(Map<String, dynamic> json)
+      : price = json['price'] as double,
+        storeId = json['storeId'] as String,
+        dateTime = DateTime.parse(json['dateTime'] as String);
+}
+
+ProductCategory getCategoryFromInt(int value) {
+  if (value >= 0 && value < ProductCategory.values.length) {
+    return ProductCategory.values[value];
+  } else {
+    throw Exception('Invalid enum value');
   }
 }
 

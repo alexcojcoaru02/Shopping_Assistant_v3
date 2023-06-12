@@ -1,21 +1,27 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using ShoppingAssistant.Api.Models;
+using ShoppingAssistant.Api.Repositories.Interfaces;
+using ShoppingAssistant.Api.Services.Interfaces;
+using System;
 
 namespace ShoppingAssistant.Api.Services
 {
-    public class ProductService
+    public class ProductService : IProductService
     {
         private const string ConnectionString = "mongodb://alex-shoping-assitant:y8czsQg2fOQKUKwBzpDzQ2KKL7dlrDQtCMoNpBjQLiwkm4zVGSVrRv1ekdpf98YONtXgO3cL05ZkACDbAsP6TQ==@alex-shoping-assitant.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@alex-shoping-assitant@";
         private const string DBName = "SATest";
         private const string CollectionName = "products";
-        private IMongoCollection<Product> productsCollection;
+        private readonly IMongoCollection<Product> productsCollection;
+
+        public readonly IProductRepository _productRepository;
 
         public MongoClient MongoClient;
 
-        public ProductService()
+        public ProductService(IProductRepository productRepository)
         {
             productsCollection = new MongoClient(ConnectionString).GetDatabase(DBName).GetCollection<Product>(CollectionName);
+            productRepository = _productRepository;
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
@@ -33,6 +39,27 @@ namespace ShoppingAssistant.Api.Services
 
         public Task<Product> GetProductByBarcode(string barcode)
             => productsCollection.Find(Builders<Product>.Filter.Eq("Barcode", barcode)).FirstAsync();
+
+        public List<double> GetProductPriceHistory(ObjectId id)
+        {
+            var priceHistories = _productRepository.GetAllProductsAsync();
+
+            var oneYearAgo = DateTime.Now.AddYears(-1);
+
+            var monthlyPrices = priceHistories.PriceHistory
+                .Where(ph => ph.DateTime > oneYearAgo)
+                .GroupBy(ph => new { ph.DateTime.Year, ph.DateTime.Month, ph.StoreId })
+                .Select(g => new { Month = new DateTime(g.Key.Year, g.Key.Month, 1), StoreId = g.Key.StoreId, AvgPrice = g.Average(ph => ph.Price) })
+                .ToList();
+
+            var result = monthlyPrices
+                .GroupBy(mp => mp.Month)
+                .Select(g => g.Average(mp => mp.AvgPrice))
+                .ToList();
+
+
+            return result;
+        }
 
     }
 }

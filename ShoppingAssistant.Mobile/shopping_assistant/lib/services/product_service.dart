@@ -18,7 +18,7 @@ class ProductService {
   }
 
   Future<Product> getProduct(String id) async {
-    final response = await http.get(Uri.parse('$_baseUrl/$id'));
+    final response = await http.get(Uri.parse('$_baseUrl/id?id=$id'));
     if (response.statusCode == 200) {
       final productJson = jsonDecode(response.body) as Map<String, dynamic>;
       return Product.fromJson(productJson);
