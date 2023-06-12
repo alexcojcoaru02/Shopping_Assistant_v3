@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using ShoppingAssistant.Api.Models;
-using ShoppingAssistant.Api.Services;
+using ShoppingAssistant.Api.Services.Interfaces;
 
 namespace ShoppingAssistant.Api.Controllers
 {
@@ -10,23 +10,24 @@ namespace ShoppingAssistant.Api.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
+        private readonly IProductService _productService;
 
-        public ProductController() { }
+        public ProductController(IProductService productService) 
+        {
+            _productService = productService;
+        }
 
         [HttpGet]
         public async Task<IEnumerable<Product>> GetProduct()
         {
-            var productService = new ProductService();
 
-            return await productService.GetAllProductsAsync();
+            return await _productService.GetAllProductsAsync();
         }
 
         [HttpGet("id")]
         public async Task<IActionResult> GetById(string id)
         {
-            var productService = new ProductService();
-
-            var product = await productService.GetProductAsync(ObjectId.Parse(id));
+            var product = await _productService.GetProductAsync(ObjectId.Parse(id));
 
             return product == null ? NotFound() : Ok(product);
         }
@@ -34,19 +35,23 @@ namespace ShoppingAssistant.Api.Controllers
         [HttpGet("barcode")]
         public async Task<IActionResult> GetByBarcode(string barcode)
         {
-            var productService = new ProductService();
-
-            var product = await productService.GetProductByBarcode(barcode);
+            var product = await _productService.GetProductByBarcode(barcode);
 
             return product == null ? NotFound() : Ok(product);
+        }
+
+        [HttpGet("priceHistory")]
+        public async Task<IActionResult> GetProductPriceHistory(string id)
+        {
+            var priceHistory = _productService.GetProductPriceHistory(ObjectId.Parse(id));
+
+            return priceHistory == null ? NotFound() : Ok(priceHistory);
         }
 
         [HttpPost]
         public async Task<IActionResult> Create(Product product)
         {
-            var productService = new ProductService();
-
-            await productService.AddProduct(product);
+            await _productService.AddProduct(product);
 
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
