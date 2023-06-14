@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
+import '../providers/products_provider.dart';
 import '../services/product_service.dart';
 
 class SearchBarWidget extends StatefulWidget {
@@ -11,24 +12,30 @@ class SearchBarWidget extends StatefulWidget {
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
+  final productsProvider = ProductsProvider();
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-      margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
-      decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(20)),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Icon(Icons.search),
-          const Text('Search product'),
-          GestureDetector(
-              child: const Icon(Icons.camera),
-              onTap: () {
-                scanBarcode();
-              })
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+      child: TextField(
+        onSubmitted: (value) {
+          productsProvider.search(value);
+        },
+        decoration: InputDecoration(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          filled: true,
+          fillColor: Colors.white,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          prefixIcon: const Icon(Icons.search),
+          hintText: 'Search product',
+          suffixIcon: GestureDetector(
+            onTap: scanBarcode,
+            child: const Icon(Icons.camera),
+          ),
+        ),
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/pages/exemplu_listare_produse.dart';
-import 'package:shopping_assistant/pages/welcome_page.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
 
 void main() {

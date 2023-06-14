@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/widgets/categories_widget.dart';
 import 'package:shopping_assistant/widgets/location_widget.dart';
+import 'package:shopping_assistant/widgets/search_bar_widget.dart';
 
 import '../providers/products_provider.dart';
 import '../widgets/list_item.dart';
@@ -61,21 +62,22 @@ class _ExempluListareState extends State<ExempluListare> {
           height: 50,
         ),
         const LocationWidget(),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: TextField(
-            onChanged: (value) {
-              productsProvider.search(value);
-            },
-            decoration: InputDecoration(
-              hintText: 'Search',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              suffixIcon: const Icon(Icons.search),
-            ),
-          ),
-        ),
+        const SearchBarWidget(),
+        // Padding(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: TextField(
+        //     onChanged: (value) {
+        //       productsProvider.search(value);
+        //     },
+        //     decoration: InputDecoration(
+        //       hintText: 'Search',
+        //       border: OutlineInputBorder(
+        //         borderRadius: BorderRadius.circular(10),
+        //       ),
+        //       suffixIcon: const Icon(Icons.search),
+        //     ),
+        //   ),
+        // ),
         const SizedBox(
           height: 10,
         ),
@@ -87,10 +89,11 @@ class _ExempluListareState extends State<ExempluListare> {
           child: Consumer(
             builder: (context, ProductsProvider provider, child) =>
                 ListView.builder(
-                    itemCount: productsProvider.searchedProducts.length,
-                    itemBuilder: (context, index) => ListItem(
-                          product: productsProvider.searchedProducts[index],
-                        )),
+              itemCount: productsProvider.searchedProducts.length,
+              itemBuilder: (context, index) => ListItem(
+                product: productsProvider.searchedProducts[index],
+              ),
+            ),
           ),
         ),
       ],

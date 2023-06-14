@@ -7,19 +7,27 @@ class LocationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text('Location'),
-        Row(
-          children: [
-            Icon(
-              Icons.location_on,
-              color: primaryGreen,
-            ),
-            const Text('Bucuresti'),
-          ],
-        ),
-      ],
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('Location'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.location_on,
+                color: primaryGreen,
+              ),
+              const Expanded(
+                child: Text(
+                  'Bucuresti',
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
