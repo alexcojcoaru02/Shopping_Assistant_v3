@@ -42,11 +42,11 @@ namespace ShoppingAssistant.Api.Services
 
         public List<double> GetProductPriceHistory(ObjectId id)
         {
-            var priceHistories = _productRepository.GetAllProductsAsync();
+            var priceHistories = _productRepository.GetAllProducts().SelectMany(x => x.PriceHistory);
 
             var oneYearAgo = DateTime.Now.AddYears(-1);
 
-            var monthlyPrices = priceHistories.PriceHistory
+            var monthlyPrices = priceHistories
                 .Where(ph => ph.DateTime > oneYearAgo)
                 .GroupBy(ph => new { ph.DateTime.Year, ph.DateTime.Month, ph.StoreId })
                 .Select(g => new { Month = new DateTime(g.Key.Year, g.Key.Month, 1), StoreId = g.Key.StoreId, AvgPrice = g.Average(ph => ph.Price) })

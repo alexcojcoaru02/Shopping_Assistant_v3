@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_assistant/models/product.dart';
+import 'package:shopping_assistant/pages/product_page.dart';
 
 class ListItem extends StatelessWidget {
-  const ListItem({super.key, required this.product});
+  const ListItem({Key? key, required this.product}) : super(key: key);
   final Product product;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: ListTile(
+        onTap: () {
+          // Navigate to the ProductPage
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ProductPage(product: product),
+            ),
+          );
+        },
         leading: Image.network(
-          "https://auchan.vtexassets.com/arquivos/ids/161311/ciocolata-milka-cu-oreo-100-g-8950825713694.jpg?v=637981755884530000",
+          product.imageUrl,
           width: 80,
           height: 80,
           fit: BoxFit.cover,

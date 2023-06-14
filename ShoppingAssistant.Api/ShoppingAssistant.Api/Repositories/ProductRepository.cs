@@ -19,8 +19,8 @@ namespace ShoppingAssistant.Api.Repositories
             productsCollection = new MongoClient(ConnectionString).GetDatabase(DBName).GetCollection<Product>(CollectionName);
         }
 
-        public async Task<List<Product>> GetAllProductsAsync()
-            => (await productsCollection.FindAsync(_ => true)).ToList();
+        public List<Product> GetAllProducts()
+            => productsCollection.FindSync(_ => true).ToList();
 
         public async Task AddProduct(Product product)
         {

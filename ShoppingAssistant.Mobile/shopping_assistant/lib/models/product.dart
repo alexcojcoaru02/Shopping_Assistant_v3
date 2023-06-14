@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 class Product {
   String id;
   String name;
@@ -6,6 +8,7 @@ class Product {
   ProductCategory category;
   String imageUrl;
   List<PriceHistory> priceHistory;
+  List<Review> reviews;
 
   Product(
     this.id,
@@ -15,6 +18,7 @@ class Product {
     this.category,
     this.imageUrl,
     this.priceHistory,
+    this.reviews,
   );
 
   Product.fromJson(Map<String, dynamic> json)
@@ -26,6 +30,9 @@ class Product {
         imageUrl = json['imageUrl'] as String,
         priceHistory = (json['priceHistory'] as List<dynamic>)
             .map((e) => PriceHistory.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        reviews = (json['reviews'] as List<dynamic>)
+            .map((e) => Review.fromJson(e as Map<String, dynamic>))
             .toList();
 }
 
@@ -43,6 +50,26 @@ class PriceHistory {
   PriceHistory.fromJson(Map<String, dynamic> json)
       : price = json['price'] as double,
         storeId = json['storeId'] as String,
+        dateTime = DateTime.parse(json['dateTime'] as String);
+}
+
+class Review {
+  int rating;
+  String comment;
+  String userId;
+  DateTime dateTime;
+
+  Review(
+    this.rating,
+    this.comment,
+    this.userId,
+    this.dateTime,
+  );
+
+  Review.fromJson(Map<String, dynamic> json)
+      : rating = json['rating'] as int,
+        comment = json['comment'] as String,
+        userId = json['userId'] as String,
         dateTime = DateTime.parse(json['dateTime'] as String);
 }
 

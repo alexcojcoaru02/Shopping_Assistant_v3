@@ -20,12 +20,22 @@ namespace ShoppingAssistant.Api.Models
         public string ImageUrl { get; set; }
 
         public List<PriceHistory> PriceHistory { get; set; }
+
+        public List<Review> Reviews { get; set; }
     }
 
     public class PriceHistory
     {
         public double Price { get; set; }
         public string StoreId { get; set; }
+        public DateTime DateTime { get; set; }
+    }
+
+    public class Review
+    {
+        public int Rating { get; set; }
+        public string Comment { get; set; }
+        public string UserId { get; set; }
         public DateTime DateTime { get; set; }
     }
 

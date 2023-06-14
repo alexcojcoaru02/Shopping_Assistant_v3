@@ -5,7 +5,7 @@ namespace ShoppingAssistant.Api.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        public List<Product> GetAllProductsAsync();
+        public List<Product> GetAllProducts();
 
         public Task AddProduct(Product product);
 

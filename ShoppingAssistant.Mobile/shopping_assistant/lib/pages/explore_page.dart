@@ -77,7 +77,10 @@ class _ExplorePageState extends State<ExplorePage> {
                   ),
                 ),
                 const SearchBarWidget(),
-                const CategoriesWidget(),
+                Consumer<ProductsProvider>(
+                  builder: (context, provider, child) =>
+                      CategoriesWidget(productsProvider: provider),
+                ),
                 const ProductsListing(),
                 Container(
                   height: 240,
@@ -126,5 +129,3 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 }
-
-

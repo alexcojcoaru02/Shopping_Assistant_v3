@@ -14,6 +14,14 @@ class ProductsProvider extends ChangeNotifier {
   List<Product> searchedProducts = [];
   String searchText = '';
 
+  static final ProductsProvider _instance = ProductsProvider._internal();
+
+  factory ProductsProvider() {
+    return _instance;
+  }
+
+  ProductsProvider._internal();
+
   //
   getDataFromAPI() async {
     try {
@@ -48,6 +56,17 @@ class ProductsProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
-  
+
+  filterByCategory(int category) {
+    if (category == -1) {
+      searchedProducts = products;
+      notifyListeners();
+      return;
+    }
+    searchedProducts =
+        products.where((product) => product.category == getCategoryFromInt(category)).toList();
+    notifyListeners();
+  }
+
   //
 }
