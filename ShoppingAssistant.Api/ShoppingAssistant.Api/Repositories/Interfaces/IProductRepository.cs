@@ -11,6 +11,8 @@ namespace ShoppingAssistant.Api.Repositories.Interfaces
 
         public Product GetProduct(ObjectId id);
 
+        public List<Product> GetProductsByHint(string hint);
+
         public Product GetProductByBarcode(string barcode);
     }
 }

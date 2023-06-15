@@ -76,6 +76,12 @@ class ProductPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Implementează acțiunea dorită pentru adăugarea unui review
+                    },
+                    child: const Text('Adăugare Review'),
+                  ),
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),

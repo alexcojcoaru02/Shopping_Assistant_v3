@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
+import '../pages/product_page.dart';
 import '../providers/products_provider.dart';
 import '../services/product_service.dart';
 
@@ -42,7 +43,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
 }
 
 Future<void> scanBarcode() async {
-  final productService = ProductService();
+  final productPorvider = ProductsProvider();
 
   String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
     "#ff6666",
@@ -54,11 +55,9 @@ Future<void> scanBarcode() async {
   if (barcodeScanRes != '-1') {
     print('Barcode scanned: $barcodeScanRes');
 
-    productService.getProductByBarcode(barcodeScanRes).then((product) {
-      // Handle the product response
-      print('Product: ${product.name}, Barcode: ${product.barcode}');
+    productPorvider.searchBaracode(barcodeScanRes).then((product) {
+      
     }).catchError((error) {
-      // Handle any errors that occur
       print('Error: $error');
     });
   } else {

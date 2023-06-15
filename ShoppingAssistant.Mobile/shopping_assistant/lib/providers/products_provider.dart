@@ -43,17 +43,56 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  search(String text) {
+  search(String text) async {
     searchText = text;
     if (text.isEmpty) {
       searchedProducts = products;
       notifyListeners();
     } else {
-      searchedProducts = products
-          .where((product) =>
-              product.name.toLowerCase().contains(text.toLowerCase()))
-          .toList();
+      try {
+        isLoading = true;
+        notifyListeners();
+        final response = await http.get(Uri.parse('$_baseUrl/hint?hint=$text'));
+        if (response.statusCode == 200) {
+          final productsJson = jsonDecode(response.body) as List<dynamic>;
+          searchedProducts = productsJson
+              .map((productJson) => Product.fromJson(productJson))
+              .toList();
+        } else {
+          throw Exception('Failed to load products');
+        }
+      } catch (e) {
+        error = e.toString();
+      } finally {
+        isLoading = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  searchBaracode(String barcode) async {
+    if (barcode.isEmpty) {
+      searchedProducts = products;
       notifyListeners();
+    } else {
+      try {
+        isLoading = true;
+        notifyListeners();
+        final response = await http.get(Uri.parse('$_baseUrl/barcode?barcode=$barcode'));
+        if (response.statusCode == 200) {
+          final productsJson = jsonDecode(response.body) as List<dynamic>;
+          searchedProducts = productsJson
+              .map((productJson) => Product.fromJson(productJson))
+              .toList();
+        } else {
+          throw Exception('Failed to load products');
+        }
+      } catch (e) {
+        error = e.toString();
+      } finally {
+        isLoading = false;
+        notifyListeners();
+      }
     }
   }
 
@@ -63,8 +102,9 @@ class ProductsProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    searchedProducts =
-        products.where((product) => product.category == getCategoryFromInt(category)).toList();
+    searchedProducts = products
+        .where((product) => product.category == getCategoryFromInt(category))
+        .toList();
     notifyListeners();
   }
 

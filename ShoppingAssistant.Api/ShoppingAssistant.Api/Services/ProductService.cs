@@ -21,7 +21,7 @@ namespace ShoppingAssistant.Api.Services
         public ProductService(IProductRepository productRepository)
         {
             productsCollection = new MongoClient(ConnectionString).GetDatabase(DBName).GetCollection<Product>(CollectionName);
-            productRepository = _productRepository;
+            _productRepository = productRepository;
         }
 
         public async Task<List<Product>> GetAllProductsAsync()
@@ -32,6 +32,13 @@ namespace ShoppingAssistant.Api.Services
             product.Id = ObjectId.GenerateNewId().ToString();
 
             await productsCollection.InsertOneAsync(product);
+        }
+
+        public List<Product> GetProductsByHint(string hint)
+        {
+            var prodcts = _productRepository.GetProductsByHint(hint);
+
+            return prodcts;
         }
 
         public Task<Product> GetProductAsync(ObjectId id)

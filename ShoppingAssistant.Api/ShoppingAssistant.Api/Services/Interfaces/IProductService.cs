@@ -11,6 +11,8 @@ namespace ShoppingAssistant.Api.Services.Interfaces
 
         public Task<Product> GetProductAsync(ObjectId id);
 
+        public List<Product> GetProductsByHint(string hint);
+
         public Task<Product> GetProductByBarcode(string barcode);
 
         public List<double> GetProductPriceHistory(ObjectId id);

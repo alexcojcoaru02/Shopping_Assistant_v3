@@ -40,6 +40,14 @@ namespace ShoppingAssistant.Api.Controllers
             return product == null ? NotFound() : Ok(product);
         }
 
+        [HttpGet("hint")]
+        public IActionResult GetByHint(string hint)
+        {
+            var products = _productService.GetProductsByHint(hint);
+
+            return products == null ? NotFound() : Ok(products);
+        }
+
         [HttpGet("priceHistory")]
         public async Task<IActionResult> GetProductPriceHistory(string id)
         {

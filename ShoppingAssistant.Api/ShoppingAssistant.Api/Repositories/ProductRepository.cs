@@ -29,6 +29,15 @@ namespace ShoppingAssistant.Api.Repositories
             await productsCollection.InsertOneAsync(product);
         }
 
+        public List<Product> GetProductsByHint(string hint)
+        {
+            var regexPattern = new BsonRegularExpression(hint, "i");
+
+            var filter = Builders<Product>.Filter.Regex("Name", regexPattern);
+
+            return productsCollection.Find(filter).ToList();
+        }
+
         public Product GetProduct(ObjectId id)
             => productsCollection.Find(Builders<Product>.Filter.Eq("_id", id)).FirstOrDefault();
 
