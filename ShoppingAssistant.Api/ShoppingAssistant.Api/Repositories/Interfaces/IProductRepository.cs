@@ -14,5 +14,11 @@ namespace ShoppingAssistant.Api.Repositories.Interfaces
         public List<Product> GetProductsByHint(string hint);
 
         public Product GetProductByBarcode(string barcode);
+
+        public void UpdateProduct(Product product);
+
+        public bool ProductExists(string productId);
+
+        public void AddReview(string productId, Review review);
     }
 }

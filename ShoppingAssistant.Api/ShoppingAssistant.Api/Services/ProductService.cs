@@ -68,5 +68,16 @@ namespace ShoppingAssistant.Api.Services
             return result;
         }
 
+        public bool ProductExists(string productId)
+        {
+            return _productRepository.ProductExists(productId);
+        }
+
+        public void AddReview(string productId, Review review)
+        {
+
+            _productRepository.AddReview(productId, review);
+        }
+
     }
 }

@@ -16,5 +16,9 @@ namespace ShoppingAssistant.Api.Services.Interfaces
         public Task<Product> GetProductByBarcode(string barcode);
 
         public List<double> GetProductPriceHistory(ObjectId id);
+
+        public bool ProductExists(string productId);
+
+        public void AddReview(string productId, Review review);
     }
 }

@@ -20,7 +20,6 @@ namespace ShoppingAssistant.Api.Controllers
         [HttpGet]
         public IEnumerable<Store> GetStore()
         {
-
             return _storeService.GetAllStores();
         }
 
