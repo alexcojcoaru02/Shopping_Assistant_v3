@@ -11,7 +11,7 @@ namespace ShoppingAssistant.Api.Controllers
     {
         private readonly IProductService _productService;
 
-        public ProductController(IProductService productService) 
+        public ProductController(IProductService productService)
         {
             _productService = productService;
         }
@@ -19,7 +19,7 @@ namespace ShoppingAssistant.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<Product>> GetProduct()
         {
-
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
             return await _productService.GetAllProductsAsync();
         }
 

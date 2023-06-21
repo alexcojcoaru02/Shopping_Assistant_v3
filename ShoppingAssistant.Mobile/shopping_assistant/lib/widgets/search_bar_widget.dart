@@ -16,25 +16,28 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   final productsProvider = ProductsProvider();
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-      child: TextField(
-        onSubmitted: (value) {
-          productsProvider.search(value);
-        },
-        decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          prefixIcon: const Icon(Icons.search),
-          hintText: 'Search product',
-          suffixIcon: GestureDetector(
-            onTap: scanBarcode,
-            child: const Icon(Icons.camera),
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 800),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        child: TextField(
+          onSubmitted: (value) {
+            productsProvider.search(value);
+          },
+          decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            prefixIcon: const Icon(Icons.search),
+            hintText: 'Search product',
+            suffixIcon: GestureDetector(
+              onTap: scanBarcode,
+              child: const Icon(Icons.camera),
+            ),
           ),
         ),
       ),

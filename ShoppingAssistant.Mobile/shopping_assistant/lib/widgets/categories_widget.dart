@@ -19,6 +19,7 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: const BoxConstraints(maxWidth: 800),
       height: 120,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,

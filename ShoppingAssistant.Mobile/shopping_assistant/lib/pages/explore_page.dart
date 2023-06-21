@@ -7,7 +7,7 @@ import '../providers/products_provider.dart';
 import '../services/product_service.dart';
 import '../utils/configuration.dart';
 import '../widgets/categories_widget.dart';
-import '../widgets/location_widget.dart';
+import '../widgets/navbar_widget.dart';
 import '../widgets/search_bar_widget.dart';
 
 class ExplorePage extends StatefulWidget {
@@ -71,7 +71,7 @@ class _ExplorePageState extends State<ExplorePage> {
                                 );
                               },
                             ),
-                      const LocationWidget(),
+                      const NavbarWidget(),
                       const CircleAvatar()
                     ],
                   ),

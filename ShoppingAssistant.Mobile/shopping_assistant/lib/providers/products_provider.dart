@@ -16,6 +16,9 @@ class ProductsProvider extends ChangeNotifier {
 
   static final ProductsProvider _instance = ProductsProvider._internal();
 
+  
+  static ProductsProvider get instance => _instance;
+
   factory ProductsProvider() {
     return _instance;
   }
@@ -26,6 +29,7 @@ class ProductsProvider extends ChangeNotifier {
   getDataFromAPI() async {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
+
       if (response.statusCode == 200) {
         final productsJson = jsonDecode(response.body) as List<dynamic>;
         products = productsJson
@@ -40,6 +44,23 @@ class ProductsProvider extends ChangeNotifier {
     } finally {
       isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<void> addReview(String productId, Review reviewInput) async {
+    final url = '$_baseUrl/$productId/reviews';
+    final response = await http.post(Uri.parse(url), body: {
+      'rating': reviewInput.rating.toString(),
+      'comment': reviewInput.comment,
+      'userId': reviewInput.userId,
+    });
+
+    if (response.statusCode == 200) {
+      // Review successfully added
+      // Update your local state or perform any necessary actions
+    } else {
+      // Error occurred while adding the review
+      // Handle the error accordingly
     }
   }
 

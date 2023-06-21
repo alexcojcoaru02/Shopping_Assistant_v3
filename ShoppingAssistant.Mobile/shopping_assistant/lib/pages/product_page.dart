@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import '../models/product.dart';
+import '../widgets/review_section.dart';
 
 class ProductPage extends StatelessWidget {
   final Product product;
@@ -17,45 +18,93 @@ class ProductPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Display product image
-            Container(
-              height: 200,
-              width: double.infinity,
-              child: Image.network(
-                product.imageUrl,
-                fit: BoxFit.cover,
-              ),
-            ),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Display product name
-                  Text(
-                    product.name,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  // Display product description
-                  Text(
-                    product.description,
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                  MediaQuery.of(context).size.width > 600
+                      ? Row(
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * .5,
+                              child: Image.network(
+                                product.imageUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product.name,
+                                    style: const TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    product.description,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    'Average Price: ${calculateAveragePrice().toStringAsFixed(2)} Lei',
+                                    style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Center(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * .7,
+                                child: Image.network(
+                                  product.imageUrl,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  product.name,
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  product.description,
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Average Price: ${calculateAveragePrice().toStringAsFixed(2)} Lei',
+                                  textAlign: TextAlign.left,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                   const SizedBox(height: 16),
-                  // Display average price
-                  Text(
-                    'Average Price: ${calculateAveragePrice().toStringAsFixed(2)} Lei',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  // Display price history graph
                   const Text(
                     'Price History',
                     style: TextStyle(
@@ -63,37 +112,15 @@ class ProductPage extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Container(
+                  SizedBox(
                     height: 200,
                     child: buildPriceHistoryGraph(),
                   ),
                   const SizedBox(height: 16),
-                  // Display reviews
-                  Text(
-                    'Reviews (${product.reviews.length})',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      // Implementează acțiunea dorită pentru adăugarea unui review
-                    },
-                    child: const Text('Adăugare Review'),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: product.reviews.length,
-                    itemBuilder: (context, index) {
-                      final review = product.reviews[index];
-                      return ListTile(
-                        title: Text('Rating: ${review.rating}'),
-                        subtitle: Text(review.comment),
-                      );
-                    },
-                  ),
+                  RatingSection(
+                    reviews: product.reviews,
+                    product: product,
+                  )
                 ],
               ),
             ),
