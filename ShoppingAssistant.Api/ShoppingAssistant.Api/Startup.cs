@@ -10,8 +10,15 @@ public class Startup
     {
         // Configurarea serviciilor și dependențelor
 
-        services.AddScoped<IProductRepository, ProductRepository>();
-        services.AddScoped<IProductService, ProductService>();
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            });
+        });
     }
 
     // Alte metode de configurare (dacă sunt necesare)

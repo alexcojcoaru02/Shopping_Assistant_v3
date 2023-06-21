@@ -19,6 +19,7 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      constraints: const BoxConstraints(maxWidth: 800),
       height: 120,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
@@ -32,8 +33,8 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                 } else {
                   selectedCategoryIndex = index;
                 }
-                  filterByCategory(widget.productsProvider,
-                      selectedCategoryIndex);
+                filterByCategory(
+                    widget.productsProvider, selectedCategoryIndex);
               });
             },
             child: Container(
@@ -44,7 +45,7 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                     margin: const EdgeInsets.only(left: 20),
                     decoration: BoxDecoration(
                       color: selectedCategoryIndex == index
-                          ? Colors.blue
+                          ? Color.fromARGB(255, 138, 167, 159)
                           : Colors.white,
                       boxShadow: shadowList,
                       borderRadius: BorderRadius.circular(10),
@@ -56,7 +57,10 @@ class _CategoriesWidgetState extends State<CategoriesWidget> {
                       color: Colors.grey[700],
                     ),
                   ),
-                  Text(categories[index]['name']),
+                  Text(
+                    categories[index]['name'],
+                    textAlign: TextAlign.justify,
+                  ),
                 ],
               ),
             ),

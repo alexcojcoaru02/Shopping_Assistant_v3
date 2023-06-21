@@ -16,6 +16,9 @@ class ProductsProvider extends ChangeNotifier {
 
   static final ProductsProvider _instance = ProductsProvider._internal();
 
+  
+  static ProductsProvider get instance => _instance;
+
   factory ProductsProvider() {
     return _instance;
   }
@@ -26,6 +29,7 @@ class ProductsProvider extends ChangeNotifier {
   getDataFromAPI() async {
     try {
       final response = await http.get(Uri.parse(_baseUrl));
+
       if (response.statusCode == 200) {
         final productsJson = jsonDecode(response.body) as List<dynamic>;
         products = productsJson
@@ -43,17 +47,73 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  search(String text) {
+  Future<void> addReview(String productId, Review reviewInput) async {
+    final url = '$_baseUrl/$productId/reviews';
+    final response = await http.post(Uri.parse(url), body: {
+      'rating': reviewInput.rating.toString(),
+      'comment': reviewInput.comment,
+      'userId': reviewInput.userId,
+    });
+
+    if (response.statusCode == 200) {
+      // Review successfully added
+      // Update your local state or perform any necessary actions
+    } else {
+      // Error occurred while adding the review
+      // Handle the error accordingly
+    }
+  }
+
+  search(String text) async {
     searchText = text;
     if (text.isEmpty) {
       searchedProducts = products;
       notifyListeners();
     } else {
-      searchedProducts = products
-          .where((product) =>
-              product.name.toLowerCase().contains(text.toLowerCase()))
-          .toList();
+      try {
+        isLoading = true;
+        notifyListeners();
+        final response = await http.get(Uri.parse('$_baseUrl/hint?hint=$text'));
+        if (response.statusCode == 200) {
+          final productsJson = jsonDecode(response.body) as List<dynamic>;
+          searchedProducts = productsJson
+              .map((productJson) => Product.fromJson(productJson))
+              .toList();
+        } else {
+          throw Exception('Failed to load products');
+        }
+      } catch (e) {
+        error = e.toString();
+      } finally {
+        isLoading = false;
+        notifyListeners();
+      }
+    }
+  }
+
+  searchBaracode(String barcode) async {
+    if (barcode.isEmpty) {
+      searchedProducts = products;
       notifyListeners();
+    } else {
+      try {
+        isLoading = true;
+        notifyListeners();
+        final response = await http.get(Uri.parse('$_baseUrl/barcode?barcode=$barcode'));
+        if (response.statusCode == 200) {
+          final productsJson = jsonDecode(response.body) as List<dynamic>;
+          searchedProducts = productsJson
+              .map((productJson) => Product.fromJson(productJson))
+              .toList();
+        } else {
+          throw Exception('Failed to load products');
+        }
+      } catch (e) {
+        error = e.toString();
+      } finally {
+        isLoading = false;
+        notifyListeners();
+      }
     }
   }
 
@@ -63,8 +123,9 @@ class ProductsProvider extends ChangeNotifier {
       notifyListeners();
       return;
     }
-    searchedProducts =
-        products.where((product) => product.category == getCategoryFromInt(category)).toList();
+    searchedProducts = products
+        .where((product) => product.category == getCategoryFromInt(category))
+        .toList();
     notifyListeners();
   }
 

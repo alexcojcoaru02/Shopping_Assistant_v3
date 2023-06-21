@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using ShoppingAssistant.Api.Models;
 using ShoppingAssistant.Api.Services.Interfaces;
@@ -12,7 +11,7 @@ namespace ShoppingAssistant.Api.Controllers
     {
         private readonly IProductService _productService;
 
-        public ProductController(IProductService productService) 
+        public ProductController(IProductService productService)
         {
             _productService = productService;
         }
@@ -20,7 +19,7 @@ namespace ShoppingAssistant.Api.Controllers
         [HttpGet]
         public async Task<IEnumerable<Product>> GetProduct()
         {
-
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
             return await _productService.GetAllProductsAsync();
         }
 
@@ -40,10 +39,28 @@ namespace ShoppingAssistant.Api.Controllers
             return product == null ? NotFound() : Ok(product);
         }
 
-        [HttpGet("priceHistory")]
-        public async Task<IActionResult> GetProductPriceHistory(string id)
+        [HttpGet("hint")]
+        public IActionResult GetByHint(string hint)
         {
-            var priceHistory = _productService.GetProductPriceHistory(ObjectId.Parse(id));
+            var products = _productService.GetProductsByHint(hint);
+
+            return products == null ? NotFound() : Ok(products);
+        }
+
+        [HttpGet("priceHistory")]
+        public async Task<IActionResult> GetProductPriceHistory(string productId)
+        {
+            if (!ObjectId.TryParse(productId, out _))
+            {
+                return BadRequest("Invalid ID format"); // Return 400 Bad Request response
+            }
+
+            if (!_productService.ProductExists(productId))
+            {
+                return NotFound(); 
+            }
+
+            var priceHistory = _productService.GetProductPriceHistory(ObjectId.Parse(productId));
 
             return priceHistory == null ? NotFound() : Ok(priceHistory);
         }
@@ -54,6 +71,32 @@ namespace ShoppingAssistant.Api.Controllers
             await _productService.AddProduct(product);
 
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
+        }
+
+        [HttpPost("{productId}/reviews")]
+        public IActionResult AddReview(string productId, Review reviewInput)
+        {
+            if (!ObjectId.TryParse(productId, out _))
+            {
+                return BadRequest("Invalid ID format"); // Return 400 Bad Request response
+            }
+
+            if (!_productService.ProductExists(productId))
+            {
+                return NotFound();
+            }
+
+            var review = new Review
+            {
+                Rating = reviewInput.Rating,
+                Comment = reviewInput.Comment,
+                UserId = reviewInput.UserId,
+                DateTime = DateTime.UtcNow
+            };
+
+            _productService.AddReview(productId, review);
+
+            return Ok();
         }
     }
 }
