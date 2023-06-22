@@ -55,12 +55,14 @@ class Review {
   int rating;
   String comment;
   String userId;
+  String userName;
   DateTime dateTime;
 
   Review(
     this.rating,
     this.comment,
     this.userId,
+    this.userName,
     this.dateTime,
   );
 
@@ -68,6 +70,7 @@ class Review {
       : rating = json['rating'] as int,
         comment = json['comment'] as String,
         userId = json['userId'] as String,
+        userName = json['userName'] as String,
         dateTime = DateTime.parse(json['dateTime'] as String);
 }
 

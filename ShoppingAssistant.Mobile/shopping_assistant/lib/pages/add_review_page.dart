@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/models/product.dart';
+import 'package:shopping_assistant/providers/auth_provider.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
 
 class AddReviewPage extends StatelessWidget {
@@ -12,6 +13,11 @@ class AddReviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsProvider = Provider.of<ProductsProvider>(context);
+
+    final authprovider = Provider.of<AuthProvider>(context);
+
+    String comment = '';
+    double rating = 0;
 
     return Scaffold(
       appBar: AppBar(
@@ -38,7 +44,7 @@ class AddReviewPage extends StatelessWidget {
                 color: Colors.amber,
               ),
               onRatingUpdate: (rating) {
-                // Handle rating update
+                rating = rating;
               },
             ),
             const SizedBox(height: 16),
@@ -53,17 +59,25 @@ class AddReviewPage extends StatelessWidget {
                 hintText: 'Enter your comment',
               ),
               onChanged: (value) {
-                // Handle comment change
+                comment = value;
               },
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Review review;
+                productsProvider.addReview(
+                  productId,
+                  Review(
+                    rating.toInt(),
+                    comment,
+                    "string",
+                    authprovider.username,
+                    DateTime.now(),
+                  ),
+                  context,
+                );
 
-                // productsProvider.addReview(productId, review);
-
-                Navigator.pop(context); // Go back to previous page
+                Navigator.pop(context);
               },
               child: const Text('Submit'),
             ),

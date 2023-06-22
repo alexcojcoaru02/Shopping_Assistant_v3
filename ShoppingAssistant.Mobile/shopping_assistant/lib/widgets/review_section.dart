@@ -1,13 +1,17 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shopping_assistant/models/product.dart';
+import 'package:intl/intl.dart';
 
 import '../pages/add_review_page.dart';
 
 class RatingSection extends StatelessWidget {
   final Product product;
   final List<Review> reviews;
-  const RatingSection({super.key, required this.reviews, required this.product});
+  const RatingSection(
+      {super.key, required this.reviews, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +33,6 @@ class RatingSection extends StatelessWidget {
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
-            ),
-            Container(
-              width: 1,
-              height: 10,
-              color: Colors.grey,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
             ),
             ElevatedButton(
               onPressed: () {
@@ -68,15 +66,90 @@ class RatingSection extends StatelessWidget {
           itemCount: reviews.length,
           itemBuilder: (context, index) {
             final review = reviews[index];
-            return ListTile(
-              title: Text('Rating: ${review.rating}'),
-              subtitle: Text(review.comment),
+            return Column(
+              children: [
+                SizedBox(
+                  width: size.width * 0.9,
+                  child: const Divider(
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                buildReviewRow(review, context),
+                const SizedBox(height: 16),
+              ],
             );
           },
         ),
       ],
     );
   }
+}
+
+Widget buildReviewRow(Review review, BuildContext context) {
+  var size = MediaQuery.of(context).size;
+  return SizedBox(
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: size.width < 500 ? size.width * 0.3 : 150,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                review.userName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                DateFormat('dd MMMM yyyy').format(review.dateTime).toString(),
+                style: const TextStyle(
+                  color: Colors.grey,
+                ),
+                maxLines: 3,
+                softWrap: true,
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: size.width * 0.6,
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RatingBarIndicator(
+                    rating: review.rating.toDouble(),
+                    itemCount: 5,
+                    itemSize: 20.0,
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  SizedBox(
+                    width: size.width * 0.6,
+                    child: Text(
+                      review.comment,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
 }
 
 Widget buildReviewSection(double averageRating, int reviewCount) {
@@ -129,7 +202,7 @@ class RatingDistribution extends StatelessWidget {
 
   Widget buildProgressBar(int rating, int count) {
     return SizedBox(
-      width: 250,
+      width: 210,
       child: Row(
         children: [
           Text(

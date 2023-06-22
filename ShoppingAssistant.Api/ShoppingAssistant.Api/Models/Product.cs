@@ -36,6 +36,7 @@ namespace ShoppingAssistant.Api.Models
         public int Rating { get; set; }
         public string Comment { get; set; }
         public string UserId { get; set; }
+        public string UserName { get; set; }
         public DateTime DateTime { get; set; }
     }
 
