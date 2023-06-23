@@ -8,10 +8,8 @@ class AuthProvider extends ChangeNotifier {
   bool get isAuthenticated => _isAuthenticated;
   String get username => _username;
 
-  // Private constructor
   AuthProvider._();
 
-  // Instance of AuthProvider
   static final AuthProvider _instance = AuthProvider._();
 
   factory AuthProvider() {
@@ -21,6 +19,9 @@ class AuthProvider extends ChangeNotifier {
   static AuthProvider get instance => _instance;
 
   Future<void> login(String username) async {
+    if (username.isEmpty) {
+      return;
+    }
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('username', username);
     await prefs.setBool('isAuthenticated', true);

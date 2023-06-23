@@ -1,8 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopping_assistant/models/product.dart';
 import 'package:http/http.dart' as http;
 
@@ -55,21 +54,22 @@ class ProductsProvider extends ChangeNotifier {
   ) async {
     try {
       final url = '$_baseUrl/$productId/reviews';
-      final response = await http.post(Uri.parse(url), body: {
-        'rating': reviewInput.rating,
-        'comment': reviewInput.comment,
-        'userName': reviewInput.userName,
-        'dateTime': '2023-06-22T23:14:31.263Z',
-        'userId': reviewInput.userId,
-      });
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(reviewInput),
+      );
 
       if (response.statusCode == 200) {
-        // Review successfully added
-        // Update your local state or perform any necessary actions
-      } else {
-        // Error occurred while adding the review
-        // Handle the error accordingly
-      }
+        notifyListeners();
+        Fluttertoast.showToast(
+          msg: "Mesajul dvs. aici",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else {}
     } on Exception catch (e) {
       showDialog(
         context: context,
