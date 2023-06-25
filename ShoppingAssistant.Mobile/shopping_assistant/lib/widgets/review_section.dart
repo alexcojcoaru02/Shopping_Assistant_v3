@@ -32,7 +32,8 @@ class _RatingSectionState extends State<RatingSection> {
   @override
   void initState() {
     ProductsProvider().getDataFromAPI();
-    reviews = ProductsProvider().products
+    reviews = ProductsProvider()
+        .products
         .firstWhere((element) => element.id == widget.productId)
         .reviews;
     userName = AuthProvider().username;
@@ -78,10 +79,11 @@ class _RatingSectionState extends State<RatingSection> {
                   ),
                 ).then(
                   (value) => {
-                    setState(() {
-                      ProductsProvider().isLoading = true;
-                      reviews.add(value);
-                      ProductsProvider().isLoading = false;
+                    Future.delayed(const Duration(milliseconds: 1000), () {
+                      setState(() {
+                        reviews.add(value);
+                        hasUserReviewed = true;
+                      });
                     })
                   },
                 );
