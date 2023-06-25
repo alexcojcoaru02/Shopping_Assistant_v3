@@ -26,6 +26,7 @@ class _RatingSectionState extends State<RatingSection> {
   late List<Review> reviews;
   late String userName;
   late bool hasUserReviewed;
+  late Review userReview;
 
   @override
   void initState() {
@@ -36,6 +37,16 @@ class _RatingSectionState extends State<RatingSection> {
         .reviews;
     userName = AuthProvider().username;
     hasUserReviewed = reviews.any((review) => review.userName == userName);
+    userReview = reviews.firstWhere(
+      (review) => review.userName == userName,
+      orElse: () => Review(
+        0,
+        '',
+        'string',
+        userName,
+        DateTime.now(),
+      ),
+    );
 
     super.initState();
   }
@@ -43,12 +54,19 @@ class _RatingSectionState extends State<RatingSection> {
   @override
   Widget build(BuildContext context) {
     String addEditButton = hasUserReviewed ? 'Edit Review' : 'Add Review';
+    String addReviewIntro1 = hasUserReviewed
+        ? 'Ai acordat ${userReview.rating} stele acestui produs'
+        : 'Detii sau ai utilizat produsul?';
+    String addReviewIntro2 = hasUserReviewed
+        ? 'Schimba ratingul si/sau descrierea'
+        : 'Spune-ti parerea acordand o nota produsului';
     reviews = ProductsProvider()
         .products
         .where((element) => element.id == widget.productId)
         .first
         .reviews;
     Size size = MediaQuery.of(context).size;
+
     return Column(
       children: [
         SizedBox(
@@ -60,38 +78,70 @@ class _RatingSectionState extends State<RatingSection> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Reviews (${reviews.length})',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        AddReviewPage(productId: widget.product.id),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Reviews (${reviews.length})',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
                   ),
-                ).then(
-                  (value) => {
-                    Future.delayed(const Duration(milliseconds: 1000), () {
-                      setState(() {
-                        reviews.add(value);
-                        hasUserReviewed = true;
-                      });
-                    })
-                  },
-                );
-              },
-              child: Text(addEditButton),
+                ),
+                const SizedBox(height: 16),
+                ReviewSumary(
+                  reviews: reviews,
+                ),
+              ],
+            ),
+            SizedBox(
+              width: size.width * 0.4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    addReviewIntro1,
+                    style: const TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    addReviewIntro2,
+                    style: const TextStyle(
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddReviewPage(
+                            productId: widget.product.id,
+                            userReview: userReview,
+                          ),
+                        ),
+                      ).then(
+                        (value) => {
+                          Future.delayed(const Duration(milliseconds: 1000),
+                              () {
+                            setState(() {
+                              reviews.add(value);
+                              hasUserReviewed = true;
+                            });
+                          })
+                        },
+                      );
+                    },
+                    child: Text(addEditButton),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        ReviewSumary(reviews: reviews,),
         ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
