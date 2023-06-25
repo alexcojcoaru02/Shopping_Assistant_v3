@@ -1,20 +1,54 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:shopping_assistant/models/product.dart';
 import 'package:intl/intl.dart';
+import 'package:shopping_assistant/providers/auth_provider.dart';
 
 import '../pages/add_review_page.dart';
+import '../providers/products_provider.dart';
 
-class RatingSection extends StatelessWidget {
+class RatingSection extends StatefulWidget {
   final Product product;
-  final List<Review> reviews;
-  const RatingSection(
-      {super.key, required this.reviews, required this.product});
+  final String productId;
+
+  const RatingSection({
+    super.key,
+    required this.product,
+    required this.productId,
+  });
+
+  @override
+  State<RatingSection> createState() => _RatingSectionState();
+}
+
+class _RatingSectionState extends State<RatingSection> {
+  late List<Review> reviews;
+  late String userName;
+  late bool hasUserReviewed;
+
+  @override
+  void initState() {
+    ProductsProvider().getDataFromAPI();
+    reviews = ProductsProvider().products
+        .firstWhere((element) => element.id == widget.productId)
+        .reviews;
+    userName = AuthProvider().username;
+    hasUserReviewed = reviews.any((review) => review.userName == userName);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String buttonText = hasUserReviewed ? 'Edit Review' : 'Add Review';
+    reviews = ProductsProvider()
+        .products
+        .where((element) => element.id == widget.productId)
+        .first
+        .reviews;
     Size size = MediaQuery.of(context).size;
     return Column(
       children: [
@@ -39,11 +73,20 @@ class RatingSection extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AddReviewPage(productId: product.id),
+                    builder: (context) =>
+                        AddReviewPage(productId: widget.product.id),
                   ),
+                ).then(
+                  (value) => {
+                    setState(() {
+                      ProductsProvider().isLoading = true;
+                      reviews.add(value);
+                      ProductsProvider().isLoading = false;
+                    })
+                  },
                 );
               },
-              child: const Text('Adăugare Review'),
+              child: Text(buttonText),
             ),
           ],
         ),

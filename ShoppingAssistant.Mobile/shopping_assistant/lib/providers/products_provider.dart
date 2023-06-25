@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 class ProductsProvider extends ChangeNotifier {
   final _baseUrl =
       'https://alex-shopping-assistant.azurewebsites.net/api/product';
+  final _baseUrlLocal =
+      'https://localhost:7014/api/product';
 
   bool isLoading = true;
   String error = '';
@@ -63,13 +65,19 @@ class ProductsProvider extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        notifyListeners();
+        getDataFromAPI();
+        notifyListeners(); 
         Fluttertoast.showToast(
-          msg: "Mesajul dvs. aici",
-          toastLength: Toast.LENGTH_SHORT,
+          msg: "Review added successfully",
+          toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
         );
-      } else {}
+      } else {
+        Fluttertoast.showToast(
+          msg: "A aparut o eroare",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );}
     } on Exception catch (e) {
       showDialog(
         context: context,

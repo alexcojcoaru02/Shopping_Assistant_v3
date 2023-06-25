@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/widgets/categories_widget.dart';
-import 'package:shopping_assistant/widgets/navbar_widget.dart';
 import 'package:shopping_assistant/widgets/search_bar_widget.dart';
 
 import '../providers/products_provider.dart';
@@ -29,11 +28,9 @@ class _ExempluListareState extends State<ExempluListare> {
     return ChangeNotifierProvider(
       create: (context) => ProductsProvider(),
       child: Scaffold(
-        body: provider.isLoading
-            ? getLoadingUI(context)
-            : provider.error.isNotEmpty
-                ? getErrorUI(provider.error)
-                : getBodyUI(provider),
+        body: provider.error.isNotEmpty
+            ? getErrorUI(provider.error)
+            : getBodyUI(provider),
       ),
     );
   }

@@ -11,11 +11,10 @@ class ListItem extends StatelessWidget {
     return Card(
       child: ListTile(
         onTap: () {
-          // Navigate to the ProductPage
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ProductPage(product: product),
+              builder: (context) => ProductPage(productId: product.id),
             ),
           );
         },

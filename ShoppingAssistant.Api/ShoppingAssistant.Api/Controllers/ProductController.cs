@@ -81,6 +81,8 @@ namespace ShoppingAssistant.Api.Controllers
         [HttpPost("{productId}/reviews")]
         public IActionResult AddReview(string productId, Review reviewInput)
         {
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+
             if (!ObjectId.TryParse(productId, out _))
             {
                 return BadRequest("Invalid ID format"); // Return 400 Bad Request response
@@ -90,7 +92,6 @@ namespace ShoppingAssistant.Api.Controllers
             {
                 return NotFound();
             }
-            Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
             var review = new Review
             {

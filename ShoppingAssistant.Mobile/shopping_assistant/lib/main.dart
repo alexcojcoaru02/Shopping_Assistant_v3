@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/pages/exemplu_listare_produse.dart';
 import 'package:shopping_assistant/pages/login_page.dart';
+import 'package:shopping_assistant/pages/wrapper_page.dart';
 import 'package:shopping_assistant/providers/auth_provider.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
 import 'package:shopping_assistant/utils/configuration.dart';
@@ -19,14 +20,15 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = AuthProvider();
+    final productsProvider = ProductsProvider();
     authProvider.checkAuthStatus();
 
     GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => AuthProvider()),
-        ChangeNotifierProvider(create: (context) => ProductsProvider()),
+        ChangeNotifierProvider.value(value: AuthProvider()),
+        ChangeNotifierProvider.value(value: ProductsProvider()),
       ],
       child: Container(
         color: Colors.grey[200],
@@ -41,7 +43,7 @@ class App extends StatelessWidget {
                   key: scaffoldKey,
                   appBar: CustomAppBar(),
                   drawer: CustomDrawer(),
-                  body: ExempluListare(),
+                  body: const WrapperPage(child: ExempluListare()),
                 );
               } else {
                 return const LoginPage();

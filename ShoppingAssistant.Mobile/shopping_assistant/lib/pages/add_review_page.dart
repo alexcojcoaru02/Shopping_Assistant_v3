@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/models/product.dart';
+import 'package:shopping_assistant/pages/product_page.dart';
 import 'package:shopping_assistant/providers/auth_provider.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
 
@@ -17,7 +18,8 @@ class AddReviewPage extends StatelessWidget {
     final authprovider = Provider.of<AuthProvider>(context);
 
     String comment = '';
-    double rating = 0;
+
+    double rating = 0.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -43,8 +45,8 @@ class AddReviewPage extends StatelessWidget {
                 Icons.star,
                 color: Colors.amber,
               ),
-              onRatingUpdate: (rating) {
-                rating = rating;
+              onRatingUpdate: (val) {
+                rating = val;
               },
             ),
             const SizedBox(height: 16),
@@ -65,19 +67,23 @@ class AddReviewPage extends StatelessWidget {
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
+                Review newReview = Review(
+                  rating.toInt(),
+                  comment,
+                  "string",
+                  authprovider.username,
+                  DateTime.now(),
+                );
                 productsProvider.addReview(
                   productId,
-                  Review(
-                    rating.toInt(),
-                    comment,
-                    "string",
-                    authprovider.username,
-                    DateTime.now(),
-                  ),
+                  newReview,
                   context,
                 );
-
-                Navigator.pop(context);
+                
+                Navigator.pop(
+                  context,
+                  newReview,
+                );
               },
               child: const Text('Submit'),
             ),
