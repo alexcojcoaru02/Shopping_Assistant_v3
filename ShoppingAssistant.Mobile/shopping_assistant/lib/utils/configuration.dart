@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../models/product.dart';
+
 Color primaryGreen = const Color(0xff416d6d);
 List<BoxShadow> shadowList = [
   const BoxShadow(color: Color.fromRGBO(183, 181, 181, 1), blurRadius: 30, offset: Offset(0, 10))
@@ -49,4 +51,29 @@ bool isMobile() {
     return true;
   }
   return false;
+}
+
+List<int> getReviewCounts(List<Review> reviews) {
+  List<int> reviewCounts = [0, 0, 0, 0, 0];
+
+  for (var review in reviews) {
+    if (review.rating >= 1 && review.rating <= 5) {
+      reviewCounts[review.rating - 1]++;
+    }
+  }
+
+  return reviewCounts;
+}
+
+double calculateAverageRating(List<Review> reviews) {
+  if (reviews.isEmpty) {
+    return 0.0;
+  }
+
+  double sum = 0.0;
+  for (Review review in reviews) {
+    sum += review.rating;
+  }
+
+  return sum / reviews.length;
 }
