@@ -8,8 +8,7 @@ import 'package:http/http.dart' as http;
 class ProductsProvider extends ChangeNotifier {
   final _baseUrl =
       'https://alex-shopping-assistant.azurewebsites.net/api/product';
-  final _baseUrlLocal =
-      'https://localhost:7014/api/product';
+  final _baseUrlLocal = 'https://localhost:7014/api/product';
 
   bool isLoading = true;
   String error = '';
@@ -66,7 +65,7 @@ class ProductsProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         getDataFromAPI();
-        notifyListeners(); 
+        notifyListeners();
         Fluttertoast.showToast(
           msg: "Review added successfully",
           toastLength: Toast.LENGTH_LONG,
@@ -77,7 +76,8 @@ class ProductsProvider extends ChangeNotifier {
           msg: "A aparut o eroare",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
-        );}
+        );
+      }
     } on Exception catch (e) {
       showDialog(
         context: context,
