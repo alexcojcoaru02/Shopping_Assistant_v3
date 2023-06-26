@@ -3,7 +3,6 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/models/product.dart';
-import 'package:shopping_assistant/providers/auth_provider.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
 import 'package:shopping_assistant/widgets/product_sumary.dart';
 
@@ -20,7 +19,6 @@ class AddReviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final productsProvider = Provider.of<ProductsProvider>(context);
-    final authProvider = Provider.of<AuthProvider>(context);
 
     final size = MediaQuery.of(context).size;
 
@@ -30,9 +28,6 @@ class AddReviewPage extends StatelessWidget {
     String btnText = userReview.comment.isEmpty && userReview.rating == 0
         ? 'Add Review'
         : 'Edit Review';
-
-    final product = productsProvider.products
-        .firstWhere((element) => element.id == productId);
 
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +40,21 @@ class AddReviewPage extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Center(
-                child: ProductSummary(productId: productId),
+                child: Column(
+                  children: [
+                    const Text(
+                      'Adauga un review pentru: ',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    ProductSummary(
+                      productId: productId,
+                      width: 300,
+                      height: 400,
+                      canAddToCart: false,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -57,7 +66,7 @@ class AddReviewPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Suarizeaza experienta ta in urma utilizarii produsului.',
+                    'Sumarizeaza experienta ta in urma utilizarii produsului.',
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w100,
@@ -98,11 +107,10 @@ class AddReviewPage extends StatelessWidget {
                   const SizedBox(height: 8),
                   TextField(
                     decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      hintText:
-                          'Spune-ne daca produsul a fost pe placul tau.\n  -Se ridica la nivelul asteptarilor?\n  -A fost de calitate?\n  -Esti multumit cu raporul calitate pret?\n  -Ai recomanda si altora?',
-                      hintStyle: TextStyle(fontSize: 12)
-                    ),
+                        border: OutlineInputBorder(),
+                        hintText:
+                            'Spune-ne daca produsul a fost pe placul tau.\n  -Se ridica la nivelul asteptarilor?\n  -A fost de calitate?\n  -Esti multumit cu raporul calitate pret?\n  -Ai recomanda si altora?',
+                        hintStyle: TextStyle(fontSize: 12)),
                     controller: textController,
                     maxLines: null,
                   ),
@@ -112,6 +120,7 @@ class AddReviewPage extends StatelessWidget {
                       if (newRating != userReview.rating ||
                           textController.text != userReview.comment) {
                         userReview.comment = textController.text;
+                        userReview.rating = newRating;
                         productsProvider.addReview(
                           productId,
                           userReview,

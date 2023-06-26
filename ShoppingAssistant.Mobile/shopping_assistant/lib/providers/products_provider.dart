@@ -15,6 +15,7 @@ class ProductsProvider extends ChangeNotifier {
   List<Product> products = [];
   List<Product> searchedProducts = [];
   String searchText = '';
+  List<Product> cartProducts = [];
 
   static final ProductsProvider _instance = ProductsProvider._internal();
 
@@ -54,6 +55,10 @@ class ProductsProvider extends ChangeNotifier {
     BuildContext context,
   ) async {
     try {
+      products
+          .firstWhere((product) => product.id == productId)
+          .reviews
+          .add(reviewInput);
       final url = '$_baseUrl/$productId/reviews';
       final response = await http.post(
         Uri.parse(url),
@@ -97,6 +102,16 @@ class ProductsProvider extends ChangeNotifier {
         },
       );
     }
+  }
+
+  void addToCart(Product product) {
+    cartProducts.add(product);
+    notifyListeners();
+  }
+
+  void removeFromCart(Product product) {
+    cartProducts.remove(product);
+    notifyListeners();
   }
 
   search(String text) async {

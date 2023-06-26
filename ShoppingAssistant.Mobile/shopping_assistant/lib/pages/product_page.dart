@@ -133,7 +133,6 @@ class _ProductPageState extends State<ProductPage> {
                   ),
                   const SizedBox(height: 16),
                   RatingSection(
-                    product: product,
                     productId: product.id,
                   )
                 ],

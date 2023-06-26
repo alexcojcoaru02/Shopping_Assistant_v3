@@ -5,10 +5,8 @@ import 'package:shopping_assistant/pages/login_page.dart';
 import 'package:shopping_assistant/pages/wrapper_page.dart';
 import 'package:shopping_assistant/providers/auth_provider.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
-import 'package:shopping_assistant/utils/configuration.dart';
 import 'package:shopping_assistant/widgets/custom_appbar.dart';
 import 'package:shopping_assistant/widgets/drawer.dart';
-import 'package:shopping_assistant/widgets/navbar_widget.dart';
 
 void main() {
   runApp(const App());

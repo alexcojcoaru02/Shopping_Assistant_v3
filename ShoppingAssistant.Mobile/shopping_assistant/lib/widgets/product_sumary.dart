@@ -8,8 +8,17 @@ import '../providers/products_provider.dart';
 class ProductSummary extends StatelessWidget {
   final String productId;
   late Product product;
+  final int width;
+  final int height;
+  final bool canAddToCart;
 
-  ProductSummary({Key? key, required this.productId}) : super(key: key) {
+  ProductSummary(
+      {Key? key,
+      required this.productId,
+      required this.width,
+      required this.height,
+      required this.canAddToCart})
+      : super(key: key) {
     product = ProductsProvider()
         .products
         .firstWhere((element) => element.id == productId);
@@ -23,50 +32,63 @@ class ProductSummary extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Adauga un review pentru: ',
-          textAlign: TextAlign.left,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
         Card(
           child: SizedBox(
-            width: 300,
-            height: 400,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Image.network(
-                    product.imageUrl,
-                    fit: BoxFit.cover,
+            width: width.toDouble(),
+            height: height.toDouble(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: width.toDouble(),
+                  height: height.toDouble() * .6,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.network(
+                      product.imageUrl,
+                      fit: BoxFit.fitHeight,
+                    ),
                   ),
-                  const SizedBox(height: 8),
-                  Center(
+                ),
+                SizedBox(
+                  width: width.toDouble(),
+                  height: height.toDouble() * .4,
+                  child: Center(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         Text(
                           product.name,
                           style: const TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(height: 8),
                         Text(
                           'Pretul mediu: ${averagePrice.toStringAsFixed(2)} lei',
                           style: const TextStyle(fontSize: 16),
                         ),
-                        const SizedBox(height: 8),
                         Center(
                           child: buildRatingSumary(
                             averageRating,
                             product.reviews.length,
                           ),
                         ),
+                        canAddToCart
+                            ? SizedBox(
+                                width: width.toDouble() * .9,
+                                child: ElevatedButton.icon(
+                                  onPressed: () {
+                                    ProductsProvider().addToCart(product);
+                                  },
+                                  icon: const Icon(Icons.shopping_cart),
+                                  label: const Text('Adaugă în coș'),
+                                ),
+                              )
+                            : const SizedBox.shrink(),
                       ],
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
