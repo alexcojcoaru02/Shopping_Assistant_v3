@@ -170,30 +170,6 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ],
                             )),
-                        // Positioned(
-                        //   top: 180,
-                        //   left: 20,
-                        //   child: SizedBox(
-                        //     width: size.width * .8 > 720 ? 720 : size.width * .8,
-                        //     child: Row(
-                        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //       children: const [
-                        //         Text(
-                        //           'Create Account',
-                        //           style: TextStyle(
-                        //             color: Colors.black54,
-                        //           ),
-                        //         ),
-                        //         Text(
-                        //           'Forgot Details',
-                        //           style: TextStyle(
-                        //             color: Colors.black54,
-                        //           ),
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // ),
                         Positioned(
                           bottom: -30,
                           right: 30,

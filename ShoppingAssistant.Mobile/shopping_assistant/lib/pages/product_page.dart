@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:provider/provider.dart';
 import '../models/product.dart';
+import '../providers/products_provider.dart';
 import '../widgets/review_section.dart';
 
-class ProductPage extends StatelessWidget {
-  final Product product;
+class ProductPage extends StatefulWidget {
+  final String productId;
 
-  const ProductPage({Key? key, required this.product}) : super(key: key);
+  const ProductPage({Key? key, required this.productId}) : super(key: key);
 
   @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  @override
+  void initState() {
+    final provider = Provider.of<ProductsProvider>(context, listen: false);
+    provider.getDataFromAPI();
+    super.initState();
+  }
+  
+  @override
   Widget build(BuildContext context) {
+    Product product = ProductsProvider().products.where((element) => element.id == widget.productId).first;
     return Scaffold(
       appBar: AppBar(
         title: Text(product.name),
@@ -52,7 +67,7 @@ class ProductPage extends StatelessWidget {
                                   ),
                                   const SizedBox(height: 16),
                                   Text(
-                                    'Average Price: ${calculateAveragePrice().toStringAsFixed(2)} Lei',
+                                    'Average Price: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
                                     style: const TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
@@ -93,7 +108,7 @@ class ProductPage extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 16),
                                 Text(
-                                  'Average Price: ${calculateAveragePrice().toStringAsFixed(2)} Lei',
+                                  'Average Price: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
                                   textAlign: TextAlign.left,
                                   style: const TextStyle(
                                     fontSize: 18,
@@ -114,12 +129,11 @@ class ProductPage extends StatelessWidget {
                   ),
                   SizedBox(
                     height: 200,
-                    child: buildPriceHistoryGraph(),
+                    child: buildPriceHistoryGraph(product),
                   ),
                   const SizedBox(height: 16),
                   RatingSection(
-                    reviews: product.reviews,
-                    product: product,
+                    productId: product.id,
                   )
                 ],
               ),
@@ -130,7 +144,7 @@ class ProductPage extends StatelessWidget {
     );
   }
 
-  double calculateAveragePrice() {
+  double calculateAveragePrice(product) {
     if (product.priceHistory.isNotEmpty) {
       double sum = 0;
       for (var price in product.priceHistory) {
@@ -141,7 +155,7 @@ class ProductPage extends StatelessWidget {
     return 0;
   }
 
-  Widget buildPriceHistoryGraph() {
+  Widget buildPriceHistoryGraph(product) {
     List<charts.Series<PriceHistory, DateTime>> seriesList = [
       charts.Series<PriceHistory, DateTime>(
         id: 'Price',

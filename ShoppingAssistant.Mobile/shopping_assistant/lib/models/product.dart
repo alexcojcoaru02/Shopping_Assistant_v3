@@ -20,7 +20,7 @@ class Product {
   );
 
   Product.fromJson(Map<String, dynamic> json)
-      : id = json['id'] as String,  
+      : id = json['id'] as String,
         name = json['name'] as String,
         barcode = json['barcode'] as String,
         description = json['description'] as String,
@@ -55,12 +55,14 @@ class Review {
   int rating;
   String comment;
   String userId;
+  String userName;
   DateTime dateTime;
 
   Review(
     this.rating,
     this.comment,
     this.userId,
+    this.userName,
     this.dateTime,
   );
 
@@ -68,7 +70,18 @@ class Review {
       : rating = json['rating'] as int,
         comment = json['comment'] as String,
         userId = json['userId'] as String,
+        userName = json['userName'] as String,
         dateTime = DateTime.parse(json['dateTime'] as String);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'rating': rating,
+      'comment': comment,
+      'userId': userId,
+      'userName': userName,
+      'dateTime': dateTime.toIso8601String(),
+    };
+  }
 }
 
 ProductCategory getCategoryFromInt(int value) {

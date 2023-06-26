@@ -27,6 +27,7 @@ namespace ShoppingAssistant.Api.Controllers
         public async Task<IActionResult> GetById(string id)
         {
             var product = await _productService.GetProductAsync(ObjectId.Parse(id));
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
             return product == null ? NotFound() : Ok(product);
         }
@@ -35,6 +36,7 @@ namespace ShoppingAssistant.Api.Controllers
         public async Task<IActionResult> GetByBarcode(string barcode)
         {
             var product = await _productService.GetProductByBarcode(barcode);
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
             return product == null ? NotFound() : Ok(product);
         }
@@ -43,6 +45,7 @@ namespace ShoppingAssistant.Api.Controllers
         public IActionResult GetByHint(string hint)
         {
             var products = _productService.GetProductsByHint(hint);
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
             return products == null ? NotFound() : Ok(products);
         }
@@ -57,8 +60,9 @@ namespace ShoppingAssistant.Api.Controllers
 
             if (!_productService.ProductExists(productId))
             {
-                return NotFound(); 
+                return NotFound();
             }
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
             var priceHistory = _productService.GetProductPriceHistory(ObjectId.Parse(productId));
 
@@ -69,6 +73,7 @@ namespace ShoppingAssistant.Api.Controllers
         public async Task<IActionResult> Create(Product product)
         {
             await _productService.AddProduct(product);
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
             return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
         }
@@ -76,6 +81,8 @@ namespace ShoppingAssistant.Api.Controllers
         [HttpPost("{productId}/reviews")]
         public IActionResult AddReview(string productId, Review reviewInput)
         {
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+
             if (!ObjectId.TryParse(productId, out _))
             {
                 return BadRequest("Invalid ID format"); // Return 400 Bad Request response
@@ -91,6 +98,7 @@ namespace ShoppingAssistant.Api.Controllers
                 Rating = reviewInput.Rating,
                 Comment = reviewInput.Comment,
                 UserId = reviewInput.UserId,
+                UserName = reviewInput.UserName,
                 DateTime = DateTime.UtcNow
             };
 

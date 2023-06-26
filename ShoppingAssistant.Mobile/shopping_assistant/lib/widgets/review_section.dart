@@ -1,178 +1,243 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:shopping_assistant/models/product.dart';
+import 'package:intl/intl.dart';
+import 'package:shopping_assistant/providers/auth_provider.dart';
+import 'package:shopping_assistant/widgets/review_sumary_widget.dart';
 
 import '../pages/add_review_page.dart';
+import '../providers/products_provider.dart';
 
-class RatingSection extends StatelessWidget {
-  final Product product;
-  final List<Review> reviews;
-  const RatingSection({super.key, required this.reviews, required this.product});
+class RatingSection extends StatefulWidget {
+  final String productId;
+
+  const RatingSection({
+    super.key,
+    required this.productId,
+  });
+
+  @override
+  State<RatingSection> createState() => _RatingSectionState();
+}
+
+class _RatingSectionState extends State<RatingSection> {
+  late String userName;
+  late bool hasUserReviewed;
+  late Review userReview;
+
+  @override
+  void initState() {
+    ProductsProvider().getDataFromAPI();
+    final ProductsProvider productsProvider = Provider.of<ProductsProvider>(
+      context,
+      listen: false,
+    );
+    userName = AuthProvider().username;
+    hasUserReviewed = productsProvider.products
+        .firstWhere((product) => product.id == widget.productId)
+        .reviews
+        .any((review) => review.userName == userName);
+    userReview = productsProvider.products
+        .firstWhere((product) => product.id == widget.productId)
+        .reviews
+        .firstWhere(
+          (review) => review.userName == userName,
+          orElse: () => Review(
+            0,
+            '',
+            'string',
+            userName,
+            DateTime.now(),
+          ),
+        );
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String addEditButton = hasUserReviewed ? 'Edit Review' : 'Add Review';
+    String addReviewIntro1 = hasUserReviewed
+        ? 'Ai acordat ${userReview.rating} stele acestui produs'
+        : 'Detii sau ai utilizat produsul?';
+    String addReviewIntro2 = hasUserReviewed
+        ? 'Schimba ratingul si/sau descrierea'
+        : 'Spune-ti parerea acordand o nota produsului';
     Size size = MediaQuery.of(context).size;
-    return Column(
-      children: [
-        SizedBox(
-          width: size.width * 0.9,
-          child: const Divider(
-            color: Colors.grey,
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+    List<Review> reviews = ProductsProvider().products
+        .firstWhere((product) => product.id == widget.productId)
+        .reviews;
+
+    return Consumer<ProductsProvider>(
+      builder: (context, productsProvider, child) => Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
           children: [
-            Text(
-              'Reviews (${reviews.length})',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            SizedBox(
+              width: size.width * 0.9,
+              child: const Divider(
+                color: Colors.grey,
               ),
             ),
-            Container(
-              width: 1,
-              height: 10,
-              color: Colors.grey,
-              margin: const EdgeInsets.symmetric(horizontal: 10),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AddReviewPage(productId: product.id),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Reviews (${reviews.length})',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    ReviewSumary(
+                      reviews: reviews,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: size.width * 0.4,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        addReviewIntro1,
+                        style: const TextStyle(
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        addReviewIntro2,
+                        style: const TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddReviewPage(
+                                productId: widget.productId,
+                                userReview: userReview,
+                              ),
+                            ),
+                          ).then(
+                            (value) => {
+                              Future.delayed(const Duration(milliseconds: 1000),
+                                  () {
+                                setState(() {
+                                  reviews.add(value);
+                                  hasUserReviewed = true;
+                                });
+                              })
+                            },
+                          );
+                        },
+                        child: Text(addEditButton),
+                      ),
+                    ],
                   ),
+                ),
+              ],
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: reviews.length,
+              itemBuilder: (context, index) {
+                final review = reviews[index];
+                return Column(
+                  children: [
+                    SizedBox(
+                      width: size.width * 0.9,
+                      child: const Divider(
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    buildReviewitem(review, context),
+                    const SizedBox(height: 16),
+                  ],
                 );
               },
-              child: const Text('Adăugare Review'),
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            buildReviewSection(
-              calculateAverageRating(reviews),
-              reviews.length,
-            ),
-            const SizedBox(width: 16),
-            RatingDistribution(
-              reviewCounts: getReviewCounts(reviews),
-            ),
-          ],
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: reviews.length,
-          itemBuilder: (context, index) {
-            final review = reviews[index];
-            return ListTile(
-              title: Text('Rating: ${review.rating}'),
-              subtitle: Text(review.comment),
-            );
-          },
-        ),
-      ],
+      ),
     );
   }
 }
 
-Widget buildReviewSection(double averageRating, int reviewCount) {
-  return Column(
-    children: [
-      Text(
-        averageRating.toStringAsFixed(2),
-        style: const TextStyle(
-            fontSize: 44, fontWeight: FontWeight.bold, color: Colors.grey),
-      ),
-      const SizedBox(height: 8),
-      RatingBarIndicator(
-        rating: averageRating,
-        itemCount: 5,
-        itemSize: 25.0,
-        itemBuilder: (context, _) => const Icon(
-          Icons.star,
-          color: Colors.amber,
-        ),
-      ),
-      const SizedBox(height: 8),
-      Text(
-        '$reviewCount review-uri',
-        style: const TextStyle(fontSize: 16),
-      ),
-    ],
-  );
-}
-
-class RatingDistribution extends StatelessWidget {
-  final List<int> reviewCounts;
-
-  const RatingDistribution({required this.reviewCounts});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
+Widget buildReviewitem(Review review, BuildContext context) {
+  var size = MediaQuery.of(context).size;
+  return SizedBox(
+    child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Rating Distribution',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        SizedBox(
+          width: size.width < 500 ? size.width * 0.3 : 150,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                review.userName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                DateFormat('dd MMMM yyyy').format(review.dateTime).toString(),
+                style: const TextStyle(
+                  color: Colors.grey,
+                ),
+                maxLines: 3,
+                softWrap: true,
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 10),
-        for (int i = 0; i < reviewCounts.length; i++)
-          buildProgressBar(i + 1, reviewCounts[i]),
+        SizedBox(
+          width: size.width * 0.6,
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RatingBarIndicator(
+                    rating: review.rating.toDouble(),
+                    itemCount: 5,
+                    itemSize: 20.0,
+                    itemBuilder: (context, _) => const Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                  ),
+                  const SizedBox(height: 5),
+                  SizedBox(
+                    width: size.width * 0.6,
+                    child: Text(
+                      review.comment,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        overflow: TextOverflow.fade,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ],
-    );
-  }
-
-  Widget buildProgressBar(int rating, int count) {
-    return SizedBox(
-      width: 250,
-      child: Row(
-        children: [
-          Text(
-            '$rating stele',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: LinearProgressIndicator(
-              value: count / reviewCounts.reduce((a, b) => a + b),
-              color: Colors.amber,
-              backgroundColor: Colors.grey[300],
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text('($count)'),
-        ],
-      ),
-    );
-  }
-}
-
-List<int> getReviewCounts(List<Review> reviews) {
-  List<int> reviewCounts = [0, 0, 0, 0, 0];
-
-  for (var review in reviews) {
-    if (review.rating >= 1 && review.rating <= 5) {
-      reviewCounts[review.rating - 1]++;
-    }
-  }
-
-  return reviewCounts;
-}
-
-double calculateAverageRating(List<Review> reviews) {
-  if (reviews.isEmpty) {
-    return 0.0;
-  }
-
-  double sum = 0.0;
-  for (Review review in reviews) {
-    sum += review.rating;
-  }
-
-  return sum / reviews.length;
+    ),
+  );
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_assistant/pages/product_page.dart';
 import 'package:shopping_assistant/widgets/categories_widget.dart';
-import 'package:shopping_assistant/widgets/navbar_widget.dart';
+import 'package:shopping_assistant/widgets/product_sumary.dart';
 import 'package:shopping_assistant/widgets/search_bar_widget.dart';
 
 import '../providers/products_provider.dart';
@@ -29,11 +30,9 @@ class _ExempluListareState extends State<ExempluListare> {
     return ChangeNotifierProvider(
       create: (context) => ProductsProvider(),
       child: Scaffold(
-        body: provider.isLoading
-            ? getLoadingUI(context)
-            : provider.error.isNotEmpty
-                ? getErrorUI(provider.error)
-                : getBodyUI(provider),
+        body: provider.error.isNotEmpty
+            ? getErrorUI(provider.error)
+            : getBodyUI(provider),
       ),
     );
   }
@@ -58,9 +57,6 @@ class _ExempluListareState extends State<ExempluListare> {
     return Center(
       child: Container(
         color: Colors.grey[200],
-        constraints: const BoxConstraints(
-          maxWidth: 800,
-        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -77,11 +73,32 @@ class _ExempluListareState extends State<ExempluListare> {
             ),
             Expanded(
               child: Consumer(
-                builder: (context, ProductsProvider provider, child) =>
+                builder: (
+                  context,
+                  ProductsProvider provider,
+                  child,
+                ) =>
                     ListView.builder(
+                  scrollDirection: Axis.horizontal,
                   itemCount: productsProvider.searchedProducts.length,
-                  itemBuilder: (context, index) => ListItem(
-                    product: productsProvider.searchedProducts[index],
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ProductPage(
+                            productId:
+                                productsProvider.searchedProducts[index].id,
+                          ),
+                        ),
+                      );
+                    },
+                    child: ProductSummary(
+                      productId: productsProvider.searchedProducts[index].id,
+                      width: 200,
+                      height: 300,
+                      canAddToCart: true,
+                    ),
                   ),
                 ),
               ),

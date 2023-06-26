@@ -1,22 +1,24 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopping_assistant/models/product.dart';
 import 'package:http/http.dart' as http;
 
 class ProductsProvider extends ChangeNotifier {
   final _baseUrl =
       'https://alex-shopping-assistant.azurewebsites.net/api/product';
+  final _baseUrlLocal = 'https://localhost:7014/api/product';
 
   bool isLoading = true;
   String error = '';
   List<Product> products = [];
   List<Product> searchedProducts = [];
   String searchText = '';
+  List<Product> cartProducts = [];
 
   static final ProductsProvider _instance = ProductsProvider._internal();
 
-  
   static ProductsProvider get instance => _instance;
 
   factory ProductsProvider() {
@@ -47,21 +49,69 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> addReview(String productId, Review reviewInput) async {
-    final url = '$_baseUrl/$productId/reviews';
-    final response = await http.post(Uri.parse(url), body: {
-      'rating': reviewInput.rating.toString(),
-      'comment': reviewInput.comment,
-      'userId': reviewInput.userId,
-    });
+  Future<void> addReview(
+    String productId,
+    Review reviewInput,
+    BuildContext context,
+  ) async {
+    try {
+      products
+          .firstWhere((product) => product.id == productId)
+          .reviews
+          .add(reviewInput);
+      final url = '$_baseUrl/$productId/reviews';
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(reviewInput),
+      );
 
-    if (response.statusCode == 200) {
-      // Review successfully added
-      // Update your local state or perform any necessary actions
-    } else {
-      // Error occurred while adding the review
-      // Handle the error accordingly
+      if (response.statusCode == 200) {
+        getDataFromAPI();
+        notifyListeners();
+        Fluttertoast.showToast(
+          msg: "Review added successfully",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: "A aparut o eroare",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+    } on Exception catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     }
+  }
+
+  void addToCart(Product product) {
+    cartProducts.add(product);
+    notifyListeners();
+  }
+
+  void removeFromCart(Product product) {
+    cartProducts.remove(product);
+    notifyListeners();
   }
 
   search(String text) async {
@@ -99,7 +149,8 @@ class ProductsProvider extends ChangeNotifier {
       try {
         isLoading = true;
         notifyListeners();
-        final response = await http.get(Uri.parse('$_baseUrl/barcode?barcode=$barcode'));
+        final response =
+            await http.get(Uri.parse('$_baseUrl/barcode?barcode=$barcode'));
         if (response.statusCode == 200) {
           final productsJson = jsonDecode(response.body) as List<dynamic>;
           searchedProducts = productsJson
