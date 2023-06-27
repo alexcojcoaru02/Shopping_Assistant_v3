@@ -149,9 +149,9 @@ class _LoginPageState extends State<LoginPage> {
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
+                                    ),                                    
+                                    FloatingActionButton(
+                                      onPressed: () {
                                         String userName = nameController.text;
                                         authProvider.login(userName);
 
