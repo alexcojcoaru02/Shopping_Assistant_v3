@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:provider/provider.dart';
+import 'package:shopping_assistant/widgets/no_reviews_widget.dart';
 import '../models/product.dart';
 import '../providers/products_provider.dart';
 import '../widgets/review_section.dart';
@@ -132,9 +133,9 @@ class _ProductPageState extends State<ProductPage> {
                     child: buildPriceHistoryGraph(product),
                   ),
                   const SizedBox(height: 16),
-                  RatingSection(
+                  product.reviews.isNotEmpty ? RatingSection(
                     productId: product.id,
-                  )
+                  ) : buildNoReviewsWidget(product.id, context)
                 ],
               ),
             ),

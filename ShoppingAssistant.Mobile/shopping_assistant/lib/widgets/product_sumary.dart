@@ -41,7 +41,7 @@ class ProductSummary extends StatelessWidget {
               children: [
                 SizedBox(
                   width: width.toDouble(),
-                  height: height.toDouble() * .6,
+                  height: height.toDouble() * .5,
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.network(
@@ -52,39 +52,47 @@ class ProductSummary extends StatelessWidget {
                 ),
                 SizedBox(
                   width: width.toDouble(),
-                  height: height.toDouble() * .4,
+                  height: height.toDouble() * .5,
                   child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          product.name,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Pretul mediu: ${averagePrice.toStringAsFixed(2)} lei',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        Center(
-                          child: buildRatingSumary(
-                            averageRating,
-                            product.reviews.length,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            product.name,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.fade,
+                            ),
                           ),
-                        ),
-                        canAddToCart
-                            ? SizedBox(
-                                width: width.toDouble() * .9,
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    ProductsProvider().addToCart(product);
-                                  },
-                                  icon: const Icon(Icons.shopping_cart),
-                                  label: const Text('Adaugă în coș'),
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                      ],
+                          Text(
+                            'Pretul mediu: ${averagePrice.toStringAsFixed(2)} lei',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          Center(
+                            child: buildRatingSumary(
+                              averageRating,
+                              product.reviews.length,
+                            ),
+                          ),
+                          canAddToCart
+                              ? SizedBox(
+                                  width: width.toDouble() * .9,
+                                  child: ElevatedButton.icon(
+                                    onPressed: () {
+                                      ProductsProvider().addToCart(product);
+                                    },
+                                    icon: const Icon(Icons.shopping_cart),
+                                    label: const Text('Adaugă în coș'),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                        ],
+                      ),
                     ),
                   ),
                 ),

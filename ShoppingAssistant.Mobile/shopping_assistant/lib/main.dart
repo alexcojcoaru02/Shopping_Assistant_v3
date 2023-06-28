@@ -29,7 +29,7 @@ class App extends StatelessWidget {
         ChangeNotifierProvider.value(value: ProductsProvider()),
       ],
       child: Container(
-        color: Colors.grey[200],
+        color: const Color(0xfff0f1f5),
         width: double.infinity,
         child: MaterialApp(
           title: 'Shopping Assistant',
@@ -41,7 +41,9 @@ class App extends StatelessWidget {
                   key: scaffoldKey,
                   appBar: CustomAppBar(),
                   drawer: CustomDrawer(),
-                  body: const WrapperPage(child: ExempluListare()),
+                  body: const WrapperPage(
+                    child: ExempluListare(),
+                  ),
                 );
               } else {
                 return const LoginPage();
