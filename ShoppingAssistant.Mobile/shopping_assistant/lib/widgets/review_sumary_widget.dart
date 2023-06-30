@@ -10,18 +10,20 @@ class ReviewSumary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: Row(
-          children: [
-            buildReviewSumary(
-              calculateAverageRating(reviews),
-              reviews.length,
-            ),
-            const SizedBox(width: 16),
-            buildNumberReviewIndicator(
-              getReviewCounts(reviews),
-            ),
-          ],
-        ),);
+    return Container(
+      child: Row(
+        children: [
+          buildReviewSumary(
+            calculateAverageRating(reviews),
+            reviews.length,
+          ),
+          const SizedBox(width: 16),
+          buildNumberReviewIndicator(
+            getReviewCounts(reviews),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -31,7 +33,10 @@ Widget buildReviewSumary(double averageRating, int reviewCount) {
       Text(
         averageRating.toStringAsFixed(2),
         style: const TextStyle(
-            fontSize: 44, fontWeight: FontWeight.bold, color: Colors.grey),
+          fontSize: 44,
+          fontWeight: FontWeight.bold,
+          color: Colors.grey,
+        ),
       ),
       const SizedBox(height: 8),
       RatingBarIndicator(
@@ -53,40 +58,40 @@ Widget buildReviewSumary(double averageRating, int reviewCount) {
 }
 
 Widget buildNumberReviewIndicator(List<int> starAggregates) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Rating Distribution',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 10),
-        for (int i = 0; i < starAggregates.length; i++)
-          buildProgressBar(starAggregates, i + 1, starAggregates[i]),
-      ],
-    );
-  }
-
-  Widget buildProgressBar(List<int> starAggregates, int rating, int count) {
-    return SizedBox(
-      width: 210,
-      child: Row(
-        children: [
-          Text(
-            '$rating stele',
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: LinearProgressIndicator(
-              value: count / starAggregates.reduce((a, b) => a + b),
-              color: Colors.amber,
-              backgroundColor: Colors.grey[300],
-            ),
-          ),
-          const SizedBox(width: 10),
-          Text('($count)'),
-        ],
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        'Rating Distribution',
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
-    );
-  }
+      const SizedBox(height: 10),
+      for (int i = 0; i < starAggregates.length; i++)
+        buildProgressBar(starAggregates, i + 1, starAggregates[i]),
+    ],
+  );
+}
+
+Widget buildProgressBar(List<int> starAggregates, int rating, int count) {
+  return SizedBox(
+    width: 210,
+    child: Row(
+      children: [
+        Text(
+          '$rating stele',
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: LinearProgressIndicator(
+            value: count / starAggregates.reduce((a, b) => a + b),
+            color: Colors.amber,
+            backgroundColor: Colors.grey[300],
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text('($count)'),
+      ],
+    ),
+  );
+}

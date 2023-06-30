@@ -123,7 +123,9 @@ class ProductsProvider extends ChangeNotifier {
       try {
         isLoading = true;
         notifyListeners();
-        final response = await http.get(Uri.parse('$_baseUrl/hint?hint=$text'));
+        final response = await http.get(
+          Uri.parse('$_baseUrl/hint?hint=$text'),
+        );
         if (response.statusCode == 200) {
           final productsJson = jsonDecode(response.body) as List<dynamic>;
           searchedProducts = productsJson
