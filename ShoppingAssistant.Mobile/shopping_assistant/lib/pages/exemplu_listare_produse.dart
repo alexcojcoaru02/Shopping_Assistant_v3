@@ -60,61 +60,63 @@ class _ExempluListareState extends State<ExempluListare> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         color: const Color(0xfff0f1f5),
-        child: ListView(
-          children: [
-            const SizedBox(
-              height: 50,
-            ),
-            const SearchBarWidget(),
-            const SizedBox(
-              height: 10,
-            ),
-            const SizedBox(
-              width: double.infinity,
-            ),
-            SizedBox(
-              height: 30,
-              width: size.width > 800 ? 800 : size.width,
-              child: Text(
-                "Produse alimentare",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 50,
+              ),
+              const SearchBarWidget(),
+              const SizedBox(
+                height: 10,
+              ),
+              const SizedBox(
+                width: double.infinity,
+              ),
+              SizedBox(
+                height: 30,
+                width: size.width > 800 ? 800 : size.width,
+                child: Text(
+                  "Produse alimentare",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              height: 360, // Ajustează înălțimea în funcție de nevoi
-              child: ScrollableProductList(
-                products: productsProvider.products // Afișează produsele
-                    .where((element) => element.category == ProductCategory.food)
-                    .toList(),
-              ),
-            ),
-            SizedBox(
-              height: 30,
-              width: size.width > 800 ? 800 : size.width,
-              child: Text(
-                "Produse electronice și electrocasnice",
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 20,
-                  fontWeight: FontWeight.w400,
+              Container(
+                height: 360, // Ajustează înălțimea în funcție de nevoi
+                child: ScrollableProductList(
+                  products: productsProvider.products // Afișează produsele
+                      .where((element) => element.category == ProductCategory.food)
+                      .toList(),
                 ),
               ),
-            ),
-            Container(
-              height: 360, // Ajustează înălțimea în funcție de nevoi
-              child: ScrollableProductList(
-                products: productsProvider.products // Afișează produsele
-                    .where((element) => element.category == ProductCategory.electronics)
-                    .toList(),
+              SizedBox(
+                height: 30,
+                width: size.width > 800 ? 800 : size.width,
+                child: Text(
+                  "Produse electronice și electrocasnice",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
               ),
-            ),
-          ],
+              Container(
+                height: 360, // Ajustează înălțimea în funcție de nevoi
+                child: ScrollableProductList(
+                  products: productsProvider.products // Afișează produsele
+                      .where((element) => element.category == ProductCategory.electronics)
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
