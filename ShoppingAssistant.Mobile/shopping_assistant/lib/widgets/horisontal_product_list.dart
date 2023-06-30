@@ -15,11 +15,24 @@ class ScrollableProductList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScrollController scrollController = ScrollController();
+    var size = MediaQuery.of(context).size;
 
-    return Expanded(
-      child: Stack(
+    return SizedBox(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Container(
+          IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              scrollController.animateTo(
+                scrollController.offset - 500,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
+            },
+          ),
+          SizedBox(
+            width: size.width - 200,
             child: ListView.builder(
               controller: scrollController,
               scrollDirection: Axis.horizontal,
@@ -44,35 +57,15 @@ class ScrollableProductList extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            left: 0,
-            top: 0,
-            bottom: 0,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
-              onPressed: () {
-                scrollController.animateTo(
-                  scrollController.offset - 100,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                );
-              },
-            ),
-          ),
-          Positioned(
-            right: 0,
-            top: 0,
-            bottom: 0,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_forward_ios_outlined),
-              onPressed: () {
-                scrollController.animateTo(
-                  scrollController.offset + 100,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                );
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.arrow_forward_ios_outlined),
+            onPressed: () {
+              scrollController.animateTo(
+                scrollController.offset + 500,
+                duration: const Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
+              );
+            },
           ),
         ],
       ),

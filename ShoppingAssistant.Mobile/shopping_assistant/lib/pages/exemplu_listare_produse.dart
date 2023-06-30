@@ -75,7 +75,7 @@ class _ExempluListareState extends State<ExempluListare> {
               ),
               SizedBox(
                 height: 30,
-                width: size.width > 800 ? 800 : size.width,
+                width: size.width - 200,
                 child: Text(
                   "Produse alimentare",
                   textAlign: TextAlign.start,
@@ -90,13 +90,14 @@ class _ExempluListareState extends State<ExempluListare> {
                 height: 360, // Ajustează înălțimea în funcție de nevoi
                 child: ScrollableProductList(
                   products: productsProvider.products // Afișează produsele
-                      .where((element) => element.category == ProductCategory.food)
+                      .where(
+                          (element) => element.category == ProductCategory.food)
                       .toList(),
                 ),
               ),
               SizedBox(
                 height: 30,
-                width: size.width > 800 ? 800 : size.width,
+                width: size.width - 200,
                 child: Text(
                   "Produse electronice și electrocasnice",
                   textAlign: TextAlign.start,
@@ -111,7 +112,8 @@ class _ExempluListareState extends State<ExempluListare> {
                 height: 360, // Ajustează înălțimea în funcție de nevoi
                 child: ScrollableProductList(
                   products: productsProvider.products // Afișează produsele
-                      .where((element) => element.category == ProductCategory.electronics)
+                      .where((element) =>
+                          element.category == ProductCategory.electronics)
                       .toList(),
                 ),
               ),
