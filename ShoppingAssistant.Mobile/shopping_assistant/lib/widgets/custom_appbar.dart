@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../pages/shopping_cart_page.dart';
 import '../utils/configuration.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -50,7 +51,12 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.shopping_cart),
           color: primaryGreen,
           onPressed: () {
-            // TODO: Handle shopping cart button press
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ShoppingCartPage(),
+              ),
+            );
           },
         ),
       ],
