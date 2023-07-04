@@ -114,7 +114,7 @@ class ProductsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  search(String text) async {
+  search(BuildContext context, String text) async {
     searchText = text;
     if (text.isEmpty) {
       searchedProducts = products;
@@ -138,6 +138,8 @@ class ProductsProvider extends ChangeNotifier {
         error = e.toString();
       } finally {
         isLoading = false;
+        
+        Navigator.pushNamed(context, '/searchPage');
         notifyListeners();
       }
     }

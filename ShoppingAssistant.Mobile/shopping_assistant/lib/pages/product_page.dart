@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:shopping_assistant/widgets/no_reviews_widget.dart';
 import '../models/product.dart';
 import '../providers/products_provider.dart';
-import '../widgets/review_section.dart';
+import '../widgets/drawer.dart';
+import '../widgets/rating_section.dart';
 
 class ProductPage extends StatefulWidget {
   final String productId;
@@ -27,119 +28,127 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     Product product = ProductsProvider().products.where((element) => element.id == widget.productId).first;
     return Scaffold(
+      drawer: const CustomDrawer(),
       appBar: AppBar(
         title: Text(product.name),
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MediaQuery.of(context).size.width > 600
-                      ? Row(
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * .5,
-                              child: Image.network(
-                                product.imageUrl,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    product.name,
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    product.description,
-                                    style: const TextStyle(fontSize: 16),
-                                  ),
-                                  const SizedBox(height: 16),
-                                  Text(
-                                    'Average Price: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Center(
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * .7,
-                                child: Image.network(
-                                  product.imageUrl,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            Column(
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(
+              maxWidth: 1200
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      MediaQuery.of(context).size.width > 600
+                          ? Row(
                               children: [
-                                Text(
-                                  product.name,
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
+                                Container(
+                                  width: MediaQuery.of(context).size.width * .5,
+                                  child: Image.network(
+                                    product.imageUrl,
+                                    fit: BoxFit.cover,
                                   ),
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  product.description,
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(fontSize: 16),
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Average Price: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
-                                  textAlign: TextAlign.left,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        product.name,
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        product.description,
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'Average Price: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Center(
+                                  child: Container(
+                                    width: MediaQuery.of(context).size.width * .7,
+                                    child: Image.network(
+                                      product.imageUrl,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      product.name,
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      product.description,
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      'Average Price: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
+                                      textAlign: TextAlign.left,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ],
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Price History',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Price History',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                      ),
+                      SizedBox(
+                        height: 200,
+                        child: buildPriceHistoryGraph(product),
+                      ),
+                      const SizedBox(height: 16),
+                      product.reviews.isNotEmpty ? RatingSection(
+                        productId: product.id,
+                      ) : buildNoReviewsWidget(product.id, context)
+                    ],
                   ),
-                  SizedBox(
-                    height: 200,
-                    child: buildPriceHistoryGraph(product),
-                  ),
-                  const SizedBox(height: 16),
-                  product.reviews.isNotEmpty ? RatingSection(
-                    productId: product.id,
-                  ) : buildNoReviewsWidget(product.id, context)
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

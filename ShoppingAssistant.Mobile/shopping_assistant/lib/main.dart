@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/pages/exemplu_listare_produse.dart';
 import 'package:shopping_assistant/pages/login_page.dart';
+import 'package:shopping_assistant/pages/search_products.dart';
 import 'package:shopping_assistant/pages/wrapper_page.dart';
 import 'package:shopping_assistant/providers/auth_provider.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
@@ -32,6 +33,10 @@ class App extends StatelessWidget {
         color: const Color(0xfff0f1f5),
         width: double.infinity,
         child: MaterialApp(
+          routes: {
+            '/searchPage': (context) =>
+                ProductGridPage(), 
+          },
           title: 'Shopping Assistant',
           debugShowCheckedModeBanner: false,
           home: Consumer<AuthProvider>(

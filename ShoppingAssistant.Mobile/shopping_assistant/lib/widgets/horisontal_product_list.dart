@@ -21,18 +21,28 @@ class ScrollableProductList extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              scrollController.animateTo(
-                scrollController.offset - 500,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              );
+          Builder(
+            builder: (context) {
+              final deviceWidth = MediaQuery.of(context).size.width;
+              if (deviceWidth >= 600) {
+                return IconButton(
+                  icon: const Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    scrollController.animateTo(
+                      scrollController.offset - 500,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                );
+              } else {
+                return const SizedBox
+                    .shrink();
+              }
             },
           ),
           SizedBox(
-            width: size.width - 200,
+            width: size.width > 600 ? size.width - 200 : size.width - 40,
             child: ListView.builder(
               controller: scrollController,
               scrollDirection: Axis.horizontal,
@@ -57,14 +67,24 @@ class ScrollableProductList extends StatelessWidget {
               ),
             ),
           ),
-          IconButton(
-            icon: const Icon(Icons.arrow_forward_ios_outlined),
-            onPressed: () {
-              scrollController.animateTo(
-                scrollController.offset + 500,
-                duration: const Duration(milliseconds: 500),
-                curve: Curves.easeInOut,
-              );
+          Builder(
+            builder: (context) {
+              final deviceWidth = MediaQuery.of(context).size.width;
+              if (deviceWidth >= 600) {
+                return IconButton(
+                  icon: const Icon(Icons.arrow_forward_ios_outlined),
+                  onPressed: () {
+                    scrollController.animateTo(
+                      scrollController.offset + 500,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                );
+              } else {
+                return const SizedBox
+                    .shrink(); // Return an empty widget if not visible
+              }
             },
           ),
         ],

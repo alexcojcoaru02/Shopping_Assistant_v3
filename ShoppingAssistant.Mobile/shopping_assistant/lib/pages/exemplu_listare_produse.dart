@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/models/product.dart';
-import 'package:shopping_assistant/pages/product_page.dart';
-import 'package:shopping_assistant/widgets/categories_widget.dart';
-import 'package:shopping_assistant/widgets/product_sumary.dart';
 import 'package:shopping_assistant/widgets/search_bar_widget.dart';
 
 import '../providers/products_provider.dart';
 import '../widgets/horisontal_product_list.dart';
 
 class ExempluListare extends StatefulWidget {
+
   const ExempluListare({super.key});
 
   @override
@@ -75,7 +73,7 @@ class _ExempluListareState extends State<ExempluListare> {
               ),
               SizedBox(
                 height: 30,
-                width: size.width - 200,
+                width: size.width > 600 ? size.width - 200 : size.width - 40,
                 child: Text(
                   "Produse alimentare",
                   textAlign: TextAlign.start,
@@ -86,10 +84,10 @@ class _ExempluListareState extends State<ExempluListare> {
                   ),
                 ),
               ),
-              Container(
-                height: 360, // Ajustează înălțimea în funcție de nevoi
+              SizedBox(
+                height: 360,
                 child: ScrollableProductList(
-                  products: productsProvider.products // Afișează produsele
+                  products: productsProvider.products
                       .where(
                           (element) => element.category == ProductCategory.food)
                       .toList(),
@@ -97,9 +95,10 @@ class _ExempluListareState extends State<ExempluListare> {
               ),
               SizedBox(
                 height: 30,
-                width: size.width - 200,
+                width: size.width > 600 ? size.width - 200 : size.width - 40,
                 child: Text(
-                  "Produse electronice și electrocasnice",
+                  "Produse electronice",
+                  overflow: TextOverflow.fade,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: Colors.grey[600],
@@ -108,10 +107,10 @@ class _ExempluListareState extends State<ExempluListare> {
                   ),
                 ),
               ),
-              Container(
-                height: 360, // Ajustează înălțimea în funcție de nevoi
+              SizedBox(
+                height: 360,
                 child: ScrollableProductList(
-                  products: productsProvider.products // Afișează produsele
+                  products: productsProvider.products
                       .where((element) =>
                           element.category == ProductCategory.electronics)
                       .toList(),

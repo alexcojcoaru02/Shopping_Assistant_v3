@@ -33,7 +33,7 @@ Widget buildReviewSumary(double averageRating, int reviewCount) {
       Text(
         averageRating.toStringAsFixed(2),
         style: const TextStyle(
-          fontSize: 44,
+          fontSize: 36,
           fontWeight: FontWeight.bold,
           color: Colors.grey,
         ),
@@ -42,7 +42,7 @@ Widget buildReviewSumary(double averageRating, int reviewCount) {
       RatingBarIndicator(
         rating: averageRating,
         itemCount: 5,
-        itemSize: 25.0,
+        itemSize: 20.0,
         itemBuilder: (context, _) => const Icon(
           Icons.star,
           color: Colors.amber,
@@ -74,7 +74,7 @@ Widget buildNumberReviewIndicator(List<int> starAggregates) {
 
 Widget buildProgressBar(List<int> starAggregates, int rating, int count) {
   return SizedBox(
-    width: 210,
+    width: 194,
     child: Row(
       children: [
         Text(
