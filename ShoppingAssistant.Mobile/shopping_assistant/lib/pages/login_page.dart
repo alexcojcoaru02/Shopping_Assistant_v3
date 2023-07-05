@@ -17,11 +17,6 @@ class _LoginPageState extends State<LoginPage> {
     final nameController = TextEditingController();
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
 
-    @override
-    void dispose() {
-      nameController.dispose();
-      super.dispose();
-    }
 
     size = MediaQuery.of(context).size;
 

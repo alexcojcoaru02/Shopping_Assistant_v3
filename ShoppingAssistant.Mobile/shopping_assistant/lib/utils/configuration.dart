@@ -13,6 +13,9 @@ List<BoxShadow> shadowList = [
       offset: Offset(0, 10))
 ];
 
+const String googleApiKey = 
+        'AIzaSyCidZhqIwj8xB9zxErdA90Kxdt_gjpuOEI';
+
 List<Map> categories = [
   {
     'name': 'Electronics',

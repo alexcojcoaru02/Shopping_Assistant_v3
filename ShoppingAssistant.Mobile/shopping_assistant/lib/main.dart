@@ -5,6 +5,7 @@ import 'package:shopping_assistant/pages/login_page.dart';
 import 'package:shopping_assistant/pages/search_products.dart';
 import 'package:shopping_assistant/pages/wrapper_page.dart';
 import 'package:shopping_assistant/providers/auth_provider.dart';
+import 'package:shopping_assistant/providers/location_provider.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
 import 'package:shopping_assistant/widgets/custom_appbar.dart';
 import 'package:shopping_assistant/widgets/drawer.dart';
@@ -28,6 +29,7 @@ class App extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: AuthProvider()),
         ChangeNotifierProvider.value(value: ProductsProvider()),
+        ChangeNotifierProvider.value(value: LocationProvider()),
       ],
       child: Container(
         color: const Color(0xfff0f1f5),

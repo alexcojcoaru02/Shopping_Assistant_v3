@@ -28,7 +28,6 @@ class _ProductPageState extends State<ProductPage> {
   Widget build(BuildContext context) {
     Product product = ProductsProvider().products.where((element) => element.id == widget.productId).first;
     return Scaffold(
-      drawer: const CustomDrawer(),
       appBar: AppBar(
         title: Text(product.name),
       ),

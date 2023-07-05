@@ -104,6 +104,61 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> editReview(
+    String productId,
+    Review reviewInput,
+    BuildContext context,
+  ) async {
+    try {
+      var userOldReview = products
+          .firstWhere((product) => product.id == productId)
+          .reviews.firstWhere((review) => review.userName == reviewInput.userName);
+      userOldReview = reviewInput;
+      final url = '$_baseUrl/$productId/reviews';
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(reviewInput),
+      );
+
+      if (response.statusCode == 200) {
+        getDataFromAPI();
+        notifyListeners();
+        Fluttertoast.showToast(
+          msg: "Review added successfully",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: "A aparut o eroare",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+    } on Exception catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
   void addToCart(Product product) {
     cartProducts.add(product);
     notifyListeners();
