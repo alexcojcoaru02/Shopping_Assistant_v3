@@ -24,7 +24,10 @@ class ResponsiveLayoutWidget extends StatelessWidget {
       );
     } else {
       return Column(
-        children: [child1, child2],
+        children: [
+          child1,
+          child2,
+        ],
       );
     }
   }

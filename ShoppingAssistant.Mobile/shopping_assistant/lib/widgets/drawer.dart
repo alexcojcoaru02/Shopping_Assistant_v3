@@ -67,8 +67,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.shopping_cart),
-            title: const Text('Shopping Cart'),
+            leading: const Icon(Icons.favorite),
+            title: const Text('Wishlist'),
             onTap: () {
               Navigator.push(
                 context,

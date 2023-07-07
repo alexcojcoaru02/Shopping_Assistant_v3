@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../utils/configuration.dart';
 
@@ -17,9 +16,10 @@ class LocationProvider with ChangeNotifier {
     getCurrentLocation();
   }
 
+  
   late Position _currentPosition;
-  late String _currentAddress;
-  late String _currentCity;
+  String _currentAddress = '';
+  String _currentCity = '';
 
   Position get currentPosition => _currentPosition;
   String get currentAddress => _currentAddress;
@@ -27,14 +27,6 @@ class LocationProvider with ChangeNotifier {
 
   void updateCurrentLocation(Position newPosition) async {
     _currentPosition = newPosition;
-    var origin = LatLng(
-      _currentPosition.latitude,
-      _currentPosition.longitude,
-    );
-    var destination = const LatLng(
-      37.43296265331129,
-      -122.08832357078792,
-    );
     _currentAddress = await getAddress(newPosition);
     _currentCity = await getCityName(newPosition);
     notifyListeners();
@@ -78,7 +70,7 @@ class LocationProvider with ChangeNotifier {
           final longName = component['long_name'];
           address += '$longName, ';
         }
-        // Elimină virgula și spațiul de la sfârșitul adresei
+        
         address = address.trim().replaceAll(RegExp(r', $'), '');
         return address;
       }

@@ -40,7 +40,7 @@ class ListItem extends StatelessWidget {
         trailing: IconButton(
           icon: const Icon(Icons.delete),
           onPressed: () {
-            ProductsProvider().removeFromCart(product);
+            ProductsProvider().toggleFavorite(product);
           },
         ),
       ),

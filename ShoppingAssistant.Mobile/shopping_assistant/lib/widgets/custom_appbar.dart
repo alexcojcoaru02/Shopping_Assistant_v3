@@ -21,7 +21,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,  
       actions: [
         IconButton(
-          icon: const Icon(Icons.shopping_cart),
+          icon: const Icon(Icons.favorite),
           color: primaryGreen,
           onPressed: () {
             Navigator.push(

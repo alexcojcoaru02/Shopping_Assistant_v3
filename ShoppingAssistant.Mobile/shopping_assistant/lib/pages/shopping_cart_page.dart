@@ -17,13 +17,17 @@ class ShoppingCartPage extends StatelessWidget {
       ),
       body: Consumer<ProductsProvider>(
         builder: (context, productsProvider, _) {
+          var wishListProducts = productsProvider.products
+              .where((element) => productsProvider.wishListProducts.contains(element.id))
+              .toList();
+
           return Column(
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: productsProvider.cartProducts.length,
+                  itemCount: wishListProducts.length,
                   itemBuilder: (context, index) {
-                    final product = productsProvider.cartProducts[index];
+                    final product = wishListProducts[index];
                     return ListItem(product: product);
                   },
                 ),
@@ -31,7 +35,7 @@ class ShoppingCartPage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
-                  'Average Total Price: ${calculeazatotal(Provider.of<ProductsProvider>(context).cartProducts).toStringAsFixed(2)}',
+                  'Average Total Price: ${calculeazatotal(wishListProducts).toStringAsFixed(2)}',
                   style: const TextStyle(fontSize: 18),
                 ),
               ),

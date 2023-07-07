@@ -82,3 +82,16 @@ double calculateAveragePrice(List<Product> products) {
 
   return total / products.length;
 }
+
+double calculateMinimumPrice(product) {
+  if (product.priceHistory.isNotEmpty) {
+    double minimumPrice = double.infinity;
+    for (var price in product.priceHistory) {
+      if (price.price < minimumPrice) {
+        minimumPrice = price.price;
+      }
+    }
+    return minimumPrice;
+  }
+  return 0;
+}

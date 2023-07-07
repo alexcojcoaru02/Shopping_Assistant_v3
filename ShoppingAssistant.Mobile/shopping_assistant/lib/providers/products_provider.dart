@@ -15,7 +15,7 @@ class ProductsProvider extends ChangeNotifier {
   List<Product> products = [];
   List<Product> searchedProducts = [];
   String searchText = '';
-  List<Product> cartProducts = [];
+  List<String> wishListProducts = [];
 
   static final ProductsProvider _instance = ProductsProvider._internal();
 
@@ -112,7 +112,8 @@ class ProductsProvider extends ChangeNotifier {
     try {
       var userOldReview = products
           .firstWhere((product) => product.id == productId)
-          .reviews.firstWhere((review) => review.userName == reviewInput.userName);
+          .reviews
+          .firstWhere((review) => review.userName == reviewInput.userName);
       userOldReview = reviewInput;
       final url = '$_baseUrl/$productId/reviews';
       final response = await http.post(
@@ -159,14 +160,16 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  void addToCart(Product product) {
-    cartProducts.add(product);
-    notifyListeners();
-  }
-
-  void removeFromCart(Product product) {
-    cartProducts.remove(product);
-    notifyListeners();
+  void toggleFavorite(Product product) {
+    bool exists = wishListProducts.any((p) => p == product.id);
+    var pro = products.firstWhere((p) => p.id == product.id);
+    if (!exists) {
+      wishListProducts.add(product.id);
+      notifyListeners();
+    } else {
+      wishListProducts.remove(product.id);
+      notifyListeners();
+    }
   }
 
   search(BuildContext context, String text) async {
@@ -193,7 +196,7 @@ class ProductsProvider extends ChangeNotifier {
         error = e.toString();
       } finally {
         isLoading = false;
-        
+
         Navigator.pushNamed(context, '/searchPage');
         notifyListeners();
       }
