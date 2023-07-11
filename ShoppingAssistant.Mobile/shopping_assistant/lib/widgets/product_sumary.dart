@@ -12,13 +12,13 @@ class ProductSummary extends StatefulWidget {
   final int height;
   final bool canAddToCart;
 
-  ProductSummary(
-      {Key? key,
-      required this.productId,
-      required this.width,
-      required this.height,
-      required this.canAddToCart})
-      : super(key: key) {
+  ProductSummary({
+    Key? key,
+    required this.productId,
+    required this.width,
+    required this.height,
+    required this.canAddToCart,
+  }) : super(key: key) {
     product = ProductsProvider()
         .products
         .firstWhere((element) => element.id == productId);

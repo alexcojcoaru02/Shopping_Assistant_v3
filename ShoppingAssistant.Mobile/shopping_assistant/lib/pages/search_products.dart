@@ -16,21 +16,18 @@ class ProductGridPage extends StatelessWidget {
       body: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 1100),
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-            ),
-            itemCount: products.length,
-            itemBuilder: (context, index) {
+          child: GridView.extent(
+            maxCrossAxisExtent: 440,
+            mainAxisSpacing: 10,
+            crossAxisSpacing: 10,
+            children: products.map((product) {
               return ProductSummary(
-                productId: products[index].id,
+                productId: product.id,
                 width: 200,
                 height: 300,
                 canAddToCart: true,
               );
-            },
+            }).toList(),
           ),
         ),
       ),

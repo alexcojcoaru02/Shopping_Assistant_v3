@@ -11,12 +11,24 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late TextEditingController nameController;
+
+  @override
+  void initState() {
+    super.initState();
+    nameController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose(); // Eliberează resursele controlerului
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    final nameController = TextEditingController();
     final AuthProvider authProvider = Provider.of<AuthProvider>(context);
-
 
     size = MediaQuery.of(context).size;
 
@@ -130,7 +142,9 @@ class _LoginPageState extends State<LoginPage> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     SizedBox(
-                                      width: size.width < 573 ? size.width - 170 : 423,
+                                      width: size.width < 573
+                                          ? size.width - 170
+                                          : 423,
                                       child: const Text(
                                         'Acesta va fi numele sub care veti putea adauga comentarii!',
                                         textAlign: TextAlign.center,
@@ -142,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
-                                    ),                                    
+                                    ),
                                     FloatingActionButton(
                                       onPressed: () {
                                         String userName = nameController.text;
