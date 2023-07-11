@@ -24,7 +24,7 @@ class ProductGridPage extends StatelessWidget {
               return ProductSummary(
                 productId: product.id,
                 width: 200,
-                height: 300,
+                height: 280,
                 canAddToCart: true,
               );
             }).toList(),

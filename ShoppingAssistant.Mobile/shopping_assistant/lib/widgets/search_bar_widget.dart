@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:speech_to_text/speech_recognition_error.dart';
@@ -20,6 +22,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   final SpeechToText _speechToText = SpeechToText();
   bool _speechEnabled = false;
   String _lastWords = '';
+  Timer? _timer;
 
   @override
   void initState() {
@@ -48,6 +51,22 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     setState(() {
       _lastWords = result.recognizedWords;
       _textFieldController.text = _lastWords;
+
+      if (result.finalResult) {
+        _stopListening();
+        productsProvider.search(context, _lastWords);
+      }
+    });
+    _resetTimer();
+  }
+
+void _resetTimer() {
+    _timer?.cancel();
+
+    _timer = Timer(const Duration(seconds: 2), () {
+      if (_speechToText.isListening) {
+        _stopListening();
+      }
     });
   }
 
@@ -85,7 +104,9 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                   ? _startListening
                   : _stopListening,
               child: Icon(
-                  _speechToText.isNotListening ? Icons.mic_off : Icons.mic),
+                Icons.mic,
+                color: !_speechToText.isListening ? Colors.grey : Colors.red,
+              ),
             ),
           ),
         ),
