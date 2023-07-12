@@ -1,4 +1,5 @@
-﻿using ShoppingAssistant.Api.Models;
+﻿using MongoDB.Bson;
+using ShoppingAssistant.Api.Models;
 
 namespace ShoppingAssistant.Api.Repositories.Interfaces
 {
@@ -6,8 +7,10 @@ namespace ShoppingAssistant.Api.Repositories.Interfaces
     {
         public Task AddStoreAsync(Store store);
 
-        public Store GetStore(Object id);
+        public Store GetStore(ObjectId id);
 
         public List<Store> GetStores();
+
+        public List<Store> GetStoresByIds(List<ObjectId> ids);
     }
 }

@@ -38,5 +38,13 @@ namespace ShoppingAssistant.Api.Controllers
 
             return store == null ? NotFound() : Ok(store);
         }
+
+        [HttpGet("list")]
+        public IActionResult GetStoresByIds([FromQuery] List<string> ids)
+        {
+            var stores = _storeService.GetStoresByIds(ids);
+
+            return Ok(stores);
+        }
     }
 }

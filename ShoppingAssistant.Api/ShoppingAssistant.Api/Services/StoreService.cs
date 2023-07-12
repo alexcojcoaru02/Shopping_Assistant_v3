@@ -28,5 +28,18 @@ namespace ShoppingAssistant.Api.Services
         {
             return _storeRepository.GetStore(id);
         }
+
+        public List<Store> GetStoresByIds(List<string> ids)
+        {
+            List<ObjectId> objectIdList = new List<ObjectId>(); 
+            foreach (var id in ids)
+            {
+                if (ObjectId.TryParse(id, out var objectId))
+                {
+                    objectIdList.Add(objectId);
+                }
+            }
+            return _storeRepository.GetStoresByIds(objectIdList);
+        }
     }
 }

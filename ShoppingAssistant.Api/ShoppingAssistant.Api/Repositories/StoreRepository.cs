@@ -25,12 +25,18 @@ namespace ShoppingAssistant.Api.Repositories
             await storesCollection.InsertOneAsync(store);
         }
 
-        public Store GetStore(object id)
+        public Store GetStore(ObjectId id)
             => storesCollection.Find(Builders<Store>.Filter.Eq("_id", id)).FirstOrDefault();
 
         public List<Store> GetStores()
         {
             return storesCollection.FindSync(_ => true).ToList();
+        }
+
+        public List<Store> GetStoresByIds(List<ObjectId> ids)
+        {
+            var stores = storesCollection.Find(Builders<Store>.Filter.In("_id", ids)).ToList();
+            return stores;
         }
     }
 }
