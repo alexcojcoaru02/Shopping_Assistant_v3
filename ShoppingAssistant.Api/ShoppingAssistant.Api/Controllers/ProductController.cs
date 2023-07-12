@@ -35,7 +35,7 @@ namespace ShoppingAssistant.Api.Controllers
         [HttpGet("barcode")]
         public async Task<IActionResult> GetByBarcode(string barcode)
         {
-            var product = await _productService.GetProductByBarcode(barcode);
+            var product = _productService.GetProductByBarcode(barcode);
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
             return product == null ? NotFound() : Ok(product);

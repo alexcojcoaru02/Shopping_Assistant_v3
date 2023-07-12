@@ -13,7 +13,7 @@ namespace ShoppingAssistant.Api.Services.Interfaces
 
         public List<Product> GetProductsByHint(string hint);
 
-        public Task<Product> GetProductByBarcode(string barcode);
+        public Product GetProductByBarcode(string barcode);
 
         public List<double> GetProductPriceHistory(ObjectId id);
 
