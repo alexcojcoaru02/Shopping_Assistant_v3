@@ -15,7 +15,7 @@ class ProductsProvider extends ChangeNotifier {
   List<Product> products = [];
   List<Product> searchedProducts = [];
   String searchText = '';
-  List<Product> cartProducts = [];
+  List<String> wishListProducts = [];
 
   static final ProductsProvider _instance = ProductsProvider._internal();
 
@@ -104,17 +104,75 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  void addToCart(Product product) {
-    cartProducts.add(product);
-    notifyListeners();
+  Future<void> editReview(
+    String productId,
+    Review reviewInput,
+    BuildContext context,
+  ) async {
+    try {
+      var userOldReview = products
+          .firstWhere((product) => product.id == productId)
+          .reviews
+          .firstWhere((review) => review.userName == reviewInput.userName);
+      userOldReview = reviewInput;
+      final url = '$_baseUrl/$productId/reviews';
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(reviewInput),
+      );
+
+      if (response.statusCode == 200) {
+        getDataFromAPI();
+        notifyListeners();
+        Fluttertoast.showToast(
+          msg: "Review added successfully",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: "A aparut o eroare",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+        );
+      }
+    } on Exception catch (e) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
-  void removeFromCart(Product product) {
-    cartProducts.remove(product);
-    notifyListeners();
+  void toggleFavorite(Product product) {
+    bool exists = wishListProducts.any((p) => p == product.id);
+    var pro = products.firstWhere((p) => p.id == product.id);
+    if (!exists) {
+      wishListProducts.add(product.id);
+      notifyListeners();
+    } else {
+      wishListProducts.remove(product.id);
+      notifyListeners();
+    }
   }
 
-  search(String text) async {
+  search(BuildContext context, String text) async {
     searchText = text;
     if (text.isEmpty) {
       searchedProducts = products;
@@ -123,7 +181,9 @@ class ProductsProvider extends ChangeNotifier {
       try {
         isLoading = true;
         notifyListeners();
-        final response = await http.get(Uri.parse('$_baseUrl/hint?hint=$text'));
+        final response = await http.get(
+          Uri.parse('$_baseUrl/hint?hint=$text'),
+        );
         if (response.statusCode == 200) {
           final productsJson = jsonDecode(response.body) as List<dynamic>;
           searchedProducts = productsJson
@@ -136,15 +196,16 @@ class ProductsProvider extends ChangeNotifier {
         error = e.toString();
       } finally {
         isLoading = false;
+
+        Navigator.pushNamed(context, '/searchPage');
         notifyListeners();
       }
     }
   }
 
-  searchBaracode(String barcode) async {
+  Future<Product> searchBaracode(String barcode) async {
     if (barcode.isEmpty) {
-      searchedProducts = products;
-      notifyListeners();
+      return Product('', '', barcode, '', ProductCategory.beauty, '', [], []);
     } else {
       try {
         isLoading = true;
@@ -152,15 +213,17 @@ class ProductsProvider extends ChangeNotifier {
         final response =
             await http.get(Uri.parse('$_baseUrl/barcode?barcode=$barcode'));
         if (response.statusCode == 200) {
-          final productsJson = jsonDecode(response.body) as List<dynamic>;
-          searchedProducts = productsJson
-              .map((productJson) => Product.fromJson(productJson))
-              .toList();
+          final productJson = jsonDecode(response.body) as Map<String, dynamic>;
+          return Product.fromJson(productJson);
+        } else if (response.statusCode == 404) {
+          return Product('', '', barcode, '', ProductCategory.beauty, '', [],
+              []);
         } else {
-          throw Exception('Failed to load products');
+          throw Exception('Failed to load product');
         }
+        throw Exception('Failed to load product');
       } catch (e) {
-        error = e.toString();
+        throw Exception(e.toString());
       } finally {
         isLoading = false;
         notifyListeners();

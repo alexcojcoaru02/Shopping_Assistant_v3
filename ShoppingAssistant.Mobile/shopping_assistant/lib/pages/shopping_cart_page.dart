@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_assistant/widgets/list_item.dart';
 
+import '../models/product.dart';
 import '../providers/products_provider.dart';
 import '../utils/configuration.dart';
 
@@ -9,38 +11,31 @@ class ShoppingCartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double averagePrice =
-        calculateAveragePrice(Provider.of<ProductsProvider>(context).cartProducts);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Shopping Cart'),
       ),
       body: Consumer<ProductsProvider>(
         builder: (context, productsProvider, _) {
+          var wishListProducts = productsProvider.products
+              .where((element) => productsProvider.wishListProducts.contains(element.id))
+              .toList();
+
           return Column(
             children: [
               Expanded(
                 child: ListView.builder(
-                  itemCount: productsProvider.cartProducts.length,
+                  itemCount: wishListProducts.length,
                   itemBuilder: (context, index) {
-                    final product = productsProvider.cartProducts[index];
-                    return ListTile(
-                      title: Text(product.name),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          productsProvider.removeFromCart(product);
-                        },
-                      ),
-                    );
+                    final product = wishListProducts[index];
+                    return ListItem(product: product);
                   },
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
-                  'Average Price: ${averagePrice.toStringAsFixed(2)}',
+                  'Average Total Price: ${calculeazatotal(wishListProducts).toStringAsFixed(2)}',
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -50,4 +45,20 @@ class ShoppingCartPage extends StatelessWidget {
       ),
     );
   }
+}
+
+calculeazatotal(List<Product> cartProducts) {
+  double total = 0;
+  cartProducts.forEach((product) {
+    total += calculeazaPretMediuProdus(product);
+  });
+  return total;
+}
+
+calculeazaPretMediuProdus(Product product) {
+  double total = 0;
+  for (var i = 0; i < product.priceHistory.length; i++) {
+    total += product.priceHistory[i].price;
+  }
+  return total / product.priceHistory.length;
 }

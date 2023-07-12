@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopping_assistant/pages/product_page.dart';
-import 'package:shopping_assistant/widgets/categories_widget.dart';
-import 'package:shopping_assistant/widgets/product_sumary.dart';
+import 'package:shopping_assistant/models/product.dart';
 import 'package:shopping_assistant/widgets/search_bar_widget.dart';
 
 import '../providers/products_provider.dart';
-import '../widgets/list_item.dart';
+import '../widgets/horisontal_product_list.dart';
 
 class ExempluListare extends StatefulWidget {
+
   const ExempluListare({super.key});
 
   @override
@@ -54,56 +53,71 @@ class _ExempluListareState extends State<ExempluListare> {
   }
 
   Widget getBodyUI(ProductsProvider productsProvider) {
+    var size = MediaQuery.of(context).size;
     return Center(
       child: Container(
-        color: Colors.grey[200],
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SizedBox(
-              height: 50,
-            ),
-            const SearchBarWidget(),
-            const SizedBox(
-              height: 10,
-            ),
-            Consumer<ProductsProvider>(
-              builder: (context, provider, child) =>
-                  CategoriesWidget(productsProvider: provider),
-            ),
-            Expanded(
-              child: Consumer(
-                builder: (
-                  context,
-                  ProductsProvider provider,
-                  child,
-                ) =>
-                    ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: productsProvider.searchedProducts.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ProductPage(
-                            productId:
-                                productsProvider.searchedProducts[index].id,
-                          ),
-                        ),
-                      );
-                    },
-                    child: ProductSummary(
-                      productId: productsProvider.searchedProducts[index].id,
-                      width: 200,
-                      height: 300,
-                      canAddToCart: true,
-                    ),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        color: const Color(0xfff0f1f5),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 50,
+              ),
+              const SearchBarWidget(),
+              const SizedBox(
+                height: 10,
+              ),
+              const SizedBox(
+                width: double.infinity,
+              ),
+              SizedBox(
+                height: 30,
+                width: size.width > 600 ? size.width - 200 : size.width - 40,
+                child: Text(
+                  "Produse alimentare",
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
                   ),
                 ),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 360,
+                child: ScrollableProductList(
+                  products: productsProvider.products
+                      .where(
+                          (element) => element.category == ProductCategory.food)
+                      .toList(),
+                ),
+              ),
+              SizedBox(
+                height: 30,
+                width: size.width > 600 ? size.width - 200 : size.width - 40,
+                child: Text(
+                  "Produse electronice",
+                  overflow: TextOverflow.fade,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 20,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 360,
+                child: ScrollableProductList(
+                  products: productsProvider.products
+                      .where((element) =>
+                          element.category == ProductCategory.electronics)
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

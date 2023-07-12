@@ -1,27 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../models/product.dart';
 import '../providers/products_provider.dart';
 
-class ProductSummary extends StatelessWidget {
+class ProductSummary extends StatefulWidget {
   final String productId;
   late Product product;
   final int width;
   final int height;
   final bool canAddToCart;
 
-  ProductSummary(
-      {Key? key,
-      required this.productId,
-      required this.width,
-      required this.height,
-      required this.canAddToCart})
-      : super(key: key) {
+  ProductSummary({
+    Key? key,
+    required this.productId,
+    required this.width,
+    required this.height,
+    required this.canAddToCart,
+  }) : super(key: key) {
     product = ProductsProvider()
         .products
         .firstWhere((element) => element.id == productId);
+  }
+
+  @override
+  State<ProductSummary> createState() => _ProductSummaryState();
+}
+
+class _ProductSummaryState extends State<ProductSummary> {
+  late bool isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    final provider = Provider.of<ProductsProvider>(context, listen: false);
+    setState(() {
+      isFavorite = provider.wishListProducts.contains(widget.productId);
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final provider = Provider.of<ProductsProvider>(context);
+    setState(() {
+      isFavorite = provider.wishListProducts.contains(widget.productId);
+    });
   }
 
   @override
@@ -29,62 +54,86 @@ class ProductSummary extends StatelessWidget {
     double averagePrice = calculateAveragePrice();
     double averageRating = calculateAverageRating();
 
+    Product product = ProductsProvider()
+        .products
+        .firstWhere((element) => element.id == widget.productId);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Card(
           child: SizedBox(
-            width: width.toDouble(),
-            height: height.toDouble(),
+            width: widget.width.toDouble(),
+            height: widget.height.toDouble(),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: width.toDouble(),
-                  height: height.toDouble() * .6,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.network(
-                      product.imageUrl,
-                      fit: BoxFit.fitHeight,
-                    ),
+                Consumer<ProductsProvider>(
+                  builder: (context, productProvider, _) => Stack(
+                    children: [
+                      SizedBox(
+                        width: widget.width.toDouble(),
+                        height: widget.height.toDouble() * .5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.network(
+                            widget.product.imageUrl,
+                            fit: BoxFit.fitHeight,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 8,
+                        right: 8,
+                        child: IconButton(
+                          icon: Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isFavorite = !isFavorite;
+                              productProvider.toggleFavorite(product);
+                            });
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 SizedBox(
-                  width: width.toDouble(),
-                  height: height.toDouble() * .4,
+                  width: widget.width.toDouble(),
+                  height: widget.height.toDouble() * .5,
                   child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          product.name,
-                          style: const TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          'Pretul mediu: ${averagePrice.toStringAsFixed(2)} lei',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        Center(
-                          child: buildRatingSumary(
-                            averageRating,
-                            product.reviews.length,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Text(
+                            widget.product.name,
+                            overflow: TextOverflow.fade,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              overflow: TextOverflow.fade,
+                            ),
                           ),
-                        ),
-                        canAddToCart
-                            ? SizedBox(
-                                width: width.toDouble() * .9,
-                                child: ElevatedButton.icon(
-                                  onPressed: () {
-                                    ProductsProvider().addToCart(product);
-                                  },
-                                  icon: const Icon(Icons.shopping_cart),
-                                  label: const Text('Adaugă în coș'),
-                                ),
-                              )
-                            : const SizedBox.shrink(),
-                      ],
+                          Text(
+                            'Pretul mediu: ${averagePrice.toStringAsFixed(2)} lei',
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          Center(
+                            child: buildRatingSumary(
+                              averageRating,
+                              widget.product.reviews.length,
+                            ),
+                          ),
+                          widget.canAddToCart
+                              ? const SizedBox.shrink()
+                              : const SizedBox.shrink(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -97,24 +146,24 @@ class ProductSummary extends StatelessWidget {
   }
 
   double calculateAveragePrice() {
-    if (product.priceHistory.isNotEmpty) {
+    if (widget.product.priceHistory.isNotEmpty) {
       double sum = 0;
-      product.priceHistory.forEach((priceHistory) {
+      widget.product.priceHistory.forEach((priceHistory) {
         sum += priceHistory.price;
       });
-      return sum / product.priceHistory.length;
+      return sum / widget.product.priceHistory.length;
     } else {
       return 0;
     }
   }
 
   double calculateAverageRating() {
-    if (product.reviews.isNotEmpty) {
+    if (widget.product.reviews.isNotEmpty) {
       double sum = 0;
-      product.reviews.forEach((review) {
+      widget.product.reviews.forEach((review) {
         sum += review.rating;
       });
-      return sum / product.reviews.length;
+      return sum / widget.product.reviews.length;
     } else {
       return 0;
     }

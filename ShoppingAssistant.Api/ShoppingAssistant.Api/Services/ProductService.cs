@@ -44,8 +44,12 @@ namespace ShoppingAssistant.Api.Services
         public Task<Product> GetProductAsync(ObjectId id)
             => productsCollection.Find(Builders<Product>.Filter.Eq("_id", id)).FirstAsync();
 
-        public Task<Product> GetProductByBarcode(string barcode)
-            => productsCollection.Find(Builders<Product>.Filter.Eq("Barcode", barcode)).FirstAsync();
+        public Product GetProductByBarcode(string barcode)
+        {
+            var product = _productRepository.GetProductByBarcode(barcode);
+
+            return product;
+        }
 
         public List<double> GetProductPriceHistory(ObjectId id)
         {

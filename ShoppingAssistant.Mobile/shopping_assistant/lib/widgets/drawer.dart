@@ -5,9 +5,15 @@ import 'package:shopping_assistant/pages/profile_page.dart';
 import 'package:shopping_assistant/providers/auth_provider.dart';
 import 'package:shopping_assistant/widgets/profile_avatar.dart';
 
-class CustomDrawer extends StatelessWidget {
+class CustomDrawer extends StatefulWidget {
+  const CustomDrawer({super.key});
+
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
   final AuthProvider authProvider = AuthProvider();
-  CustomDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,17 +63,12 @@ class CustomDrawer extends StatelessWidget {
             leading: const Icon(Icons.home),
             title: const Text('Home'),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const ExempluListare(),
-                ),
-              );
+              setState(() {});
             },
           ),
           ListTile(
-            leading: const Icon(Icons.shopping_cart),
-            title: const Text('Shopping Cart'),
+            leading: const Icon(Icons.favorite),
+            title: const Text('Wishlist'),
             onTap: () {
               Navigator.push(
                 context,

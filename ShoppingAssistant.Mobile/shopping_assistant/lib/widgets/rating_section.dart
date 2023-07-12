@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shopping_assistant/models/product.dart';
 import 'package:intl/intl.dart';
 import 'package:shopping_assistant/providers/auth_provider.dart';
+import 'package:shopping_assistant/widgets/responsive_layout.dart';
 import 'package:shopping_assistant/widgets/review_sumary_widget.dart';
 
 import '../pages/add_review_page.dart';
@@ -66,7 +67,8 @@ class _RatingSectionState extends State<RatingSection> {
         : 'Spune-ti parerea acordand o nota produsului';
     Size size = MediaQuery.of(context).size;
 
-    List<Review> reviews = ProductsProvider().products
+    List<Review> reviews = ProductsProvider()
+        .products
         .firstWhere((product) => product.id == widget.productId)
         .reviews;
 
@@ -81,72 +83,71 @@ class _RatingSectionState extends State<RatingSection> {
                 color: Colors.grey,
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
+            ResponsiveLayoutWidget(
+              child1: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Reviews (${reviews.length})',
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ReviewSumary(
+                    reviews: reviews,
+                  ),
+                ],
+              ),
+              child2: SizedBox(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(
+                      height: 10,
+                    ),
                     Text(
-                      'Reviews (${reviews.length})',
+                      addReviewIntro1,
                       style: const TextStyle(
                         fontSize: 20,
-                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    ReviewSumary(
-                      reviews: reviews,
+                    const SizedBox(height: 8),
+                    Text(
+                      addReviewIntro2,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AddReviewPage(
+                              productId: widget.productId,
+                              userReview: userReview,
+                            ),
+                          ),
+                        ).then(
+                          (value) => {
+                            Future.delayed(const Duration(milliseconds: 1000),
+                                () {
+                              setState(() {
+                                reviews.add(value);
+                                hasUserReviewed = true;
+                              });
+                            })
+                          },
+                        );
+                      },
+                      child: Text(addEditButton),
                     ),
                   ],
                 ),
-                SizedBox(
-                  width: size.width * 0.4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        addReviewIntro1,
-                        style: const TextStyle(
-                          fontSize: 20,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        addReviewIntro2,
-                        style: const TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AddReviewPage(
-                                productId: widget.productId,
-                                userReview: userReview,
-                              ),
-                            ),
-                          ).then(
-                            (value) => {
-                              Future.delayed(const Duration(milliseconds: 1000),
-                                  () {
-                                setState(() {
-                                  reviews.add(value);
-                                  hasUserReviewed = true;
-                                });
-                              })
-                            },
-                          );
-                        },
-                        child: Text(addEditButton),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
             ListView.builder(
               shrinkWrap: true,
@@ -178,12 +179,14 @@ class _RatingSectionState extends State<RatingSection> {
 
 Widget buildReviewitem(Review review, BuildContext context) {
   var size = MediaQuery.of(context).size;
+  var width = size.width > 1200 ? 1200 : size.width;
+
   return SizedBox(
     child: Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: size.width < 500 ? size.width * 0.3 : 150,
+          width: width < 500 ? width * 0.3 : 150,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -206,33 +209,29 @@ Widget buildReviewitem(Review review, BuildContext context) {
           ),
         ),
         SizedBox(
-          width: size.width * 0.6,
-          child: Row(
+          width: width * 0.6- 12,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RatingBarIndicator(
-                    rating: review.rating.toDouble(),
-                    itemCount: 5,
-                    itemSize: 20.0,
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
+              RatingBarIndicator(
+                rating: review.rating.toDouble(),
+                itemCount: 5,
+                itemSize: 20.0,
+                itemBuilder: (context, _) => const Icon(
+                  Icons.star,
+                  color: Colors.amber,
+                ),
+              ),
+              const SizedBox(height: 5),
+              SizedBox(
+                width: width * 0.6,
+                child: Text(
+                  review.comment,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    overflow: TextOverflow.fade,
                   ),
-                  const SizedBox(height: 5),
-                  SizedBox(
-                    width: size.width * 0.6,
-                    child: Text(
-                      review.comment,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        overflow: TextOverflow.fade,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),

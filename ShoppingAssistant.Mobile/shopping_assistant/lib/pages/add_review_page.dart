@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shopping_assistant/models/product.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
 import 'package:shopping_assistant/widgets/product_sumary.dart';
+import 'package:shopping_assistant/widgets/responsive_layout.dart';
 
 class AddReviewPage extends StatelessWidget {
   final String productId;
@@ -33,10 +34,10 @@ class AddReviewPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Add Review'),
       ),
-      body: Row(
-        children: [
-          SizedBox(
-            width: size.width * .5,
+      body: SingleChildScrollView(
+        child: ResponsiveLayoutWidget(
+          child1: SizedBox(
+            width: size.width > 600 ? size.width * .5 : size.width,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Center(
@@ -58,8 +59,8 @@ class AddReviewPage extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(
-            width: size.width * .5,
+          child2: SizedBox(
+            width: size.width > 600 ? size.width * .5 : size.width,
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -84,7 +85,7 @@ class AddReviewPage extends StatelessWidget {
                     height: 14,
                   ),
                   RatingBar.builder(
-                    initialRating: newRating.toDouble(),
+                    initialRating: userReview.rating.toDouble(),
                     minRating: 1,
                     direction: Axis.horizontal,
                     allowHalfRating: false,
@@ -146,7 +147,7 @@ class AddReviewPage extends StatelessWidget {
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

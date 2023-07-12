@@ -10,5 +10,7 @@ namespace ShoppingAssistant.Api.Services.Interfaces
         public Store GetStore(ObjectId id);
 
         public Task AddStoreAsync(Store store);
+
+        public List<Store> GetStoresByIds(List<string> ids);
     }
 }
