@@ -203,10 +203,9 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
-  searchBaracode(String barcode) async {
+  Future<Product> searchBaracode(String barcode) async {
     if (barcode.isEmpty) {
-      searchedProducts = products;
-      notifyListeners();
+      return Product('', '', barcode, '', ProductCategory.beauty, '', [], []);
     } else {
       try {
         isLoading = true;
@@ -214,15 +213,17 @@ class ProductsProvider extends ChangeNotifier {
         final response =
             await http.get(Uri.parse('$_baseUrl/barcode?barcode=$barcode'));
         if (response.statusCode == 200) {
-          final productsJson = jsonDecode(response.body) as List<dynamic>;
-          searchedProducts = productsJson
-              .map((productJson) => Product.fromJson(productJson))
-              .toList();
+          final productJson = jsonDecode(response.body) as Map<String, dynamic>;
+          return Product.fromJson(productJson);
+        } else if (response.statusCode == 404) {
+          return Product('', '', barcode, '', ProductCategory.beauty, '', [],
+              []);
         } else {
-          throw Exception('Failed to load products');
+          throw Exception('Failed to load product');
         }
+        throw Exception('Failed to load product');
       } catch (e) {
-        error = e.toString();
+        throw Exception(e.toString());
       } finally {
         isLoading = false;
         notifyListeners();

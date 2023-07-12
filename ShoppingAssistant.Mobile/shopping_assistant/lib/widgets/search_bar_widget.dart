@@ -7,6 +7,9 @@ import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../models/product.dart';
+import '../pages/add_product_page.dart';
+import '../pages/product_page.dart';
 import '../providers/products_provider.dart';
 
 class SearchBarWidget extends StatefulWidget {
@@ -60,7 +63,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     _resetTimer();
   }
 
-void _resetTimer() {
+  void _resetTimer() {
     _timer?.cancel();
 
     _timer = Timer(const Duration(seconds: 2), () {
@@ -84,7 +87,7 @@ void _resetTimer() {
     return Container(
       constraints: const BoxConstraints(maxWidth: 1100),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
         child: TextField(
           controller: _textFieldController,
           onSubmitted: (value) {
@@ -99,14 +102,38 @@ void _resetTimer() {
             ),
             prefixIcon: const Icon(Icons.search),
             hintText: 'Search product',
-            suffixIcon: GestureDetector(
-              onTap: _speechToText.isNotListening
-                  ? _startListening
-                  : _stopListening,
-              child: Icon(
-                Icons.mic,
-                color: !_speechToText.isListening ? Colors.grey : Colors.red,
-              ),
+            suffixIcon: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: _speechToText.isNotListening
+                      ? _startListening
+                      : _stopListening,
+                  child: Icon(
+                    Icons.mic,
+                    color:
+                        !_speechToText.isListening ? Colors.grey : Colors.red,
+                  ),
+                ),
+                if (MediaQuery.of(context).size.width < 600) ...[
+                  const SizedBox(width: 5),
+                  GestureDetector(
+                    onTap: () {
+                      scanBarcode(context);
+                    },
+                    child: const CircleAvatar(
+                      radius: 15,
+                      backgroundColor: Colors.grey,
+                      child: Icon(
+                        Icons.qr_code_scanner,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                ],
+              ],
             ),
           ),
         ),
@@ -115,8 +142,9 @@ void _resetTimer() {
   }
 }
 
-Future<void> scanBarcode() async {
+Future<void> scanBarcode(BuildContext context) async {
   final productPorvider = ProductsProvider();
+  Product searchedProduct;
 
   String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
     "#ff6666",
@@ -126,12 +154,26 @@ Future<void> scanBarcode() async {
   );
 
   if (barcodeScanRes != '-1') {
-    print('Barcode scanned: $barcodeScanRes');
-
-    productPorvider
-        .searchBaracode(barcodeScanRes)
-        .then((product) {})
-        .catchError((error) {
+    productPorvider.searchBaracode(barcodeScanRes).then((product) {
+      searchedProduct = product;
+      if (searchedProduct.id != '') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ProductPage(
+              productId: searchedProduct.id,
+            ),
+          ),
+        );
+      } else {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddProductPage(barcode: barcodeScanRes),
+          ),
+        );
+      }
+    }).catchError((error) {
       print('Error: $error');
     });
   } else {
