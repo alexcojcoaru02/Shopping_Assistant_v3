@@ -5,16 +5,21 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopping_assistant/models/product.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/store.dart';
+
 class ProductsProvider extends ChangeNotifier {
+  final _baseForStores =
+      'https://alex-shopping-assistant.azurewebsites.net/api/store';
   final _baseUrl =
       'https://alex-shopping-assistant.azurewebsites.net/api/product';
-  final _baseUrlLocal = 'https://localhost:7014/api/product';
+  final _baseUrlLocal = 'https://localhost:7014/api/store';
 
   bool isLoading = true;
   String error = '';
   List<Product> products = [];
   List<Product> searchedProducts = [];
   String searchText = '';
+  List<Store> stores = [];
   List<String> wishListProducts = [];
 
   static final ProductsProvider _instance = ProductsProvider._internal();
@@ -43,6 +48,32 @@ class ProductsProvider extends ChangeNotifier {
       }
     } catch (e) {
       error = e.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getStoresByIds(List<String> ids) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+      final queryParams = ids.map((id) => 'ids=$id').join('&');
+
+      final url = Uri.parse('$_baseForStores/list?$queryParams');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final storesFromJson = jsonDecode(response.body) as List<dynamic>;
+        stores = storesFromJson
+            .map((storeJson) => Store.fromJson(storeJson))
+            .toList();
+      } else {
+        throw Exception('Failed to get stores by IDs');
+      }
+    } catch (e) {
+      print('Error: $e');
+      stores = [];
     } finally {
       isLoading = false;
       notifyListeners();
@@ -216,8 +247,8 @@ class ProductsProvider extends ChangeNotifier {
           final productJson = jsonDecode(response.body) as Map<String, dynamic>;
           return Product.fromJson(productJson);
         } else if (response.statusCode == 404) {
-          return Product('', '', barcode, '', ProductCategory.beauty, '', [],
-              []);
+          return Product(
+              '', '', barcode, '', ProductCategory.beauty, '', [], []);
         } else {
           throw Exception('Failed to load product');
         }

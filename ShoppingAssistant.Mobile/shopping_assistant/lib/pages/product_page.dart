@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/widgets/no_reviews_widget.dart';
 import '../models/product.dart';
 import '../providers/products_provider.dart';
 import '../utils/configuration.dart';
 import '../widgets/eumorphic_button.dart';
+import '../widgets/offer_widget.dart';
 import '../widgets/rating_section.dart';
 import '../widgets/responsive_layout.dart';
 
@@ -30,7 +30,7 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     super.initState();
-    final provider = Provider.of<ProductsProvider>(context, listen: false);    
+    final provider = Provider.of<ProductsProvider>(context, listen: false);
     isFavorite = provider.wishListProducts.contains(widget.productId);
   }
 
@@ -59,7 +59,11 @@ class _ProductPageState extends State<ProductPage> {
                   children: [
                     ResponsiveLayoutWidget(
                       child1: SizedBox(
-                        width: size.width> 1200 ? 600 :size.width > 600 ? size.width * .5 : size.width,
+                        width: size.width > 1200
+                            ? 600
+                            : size.width > 600
+                                ? size.width * .5
+                                : size.width,
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Container(
@@ -84,7 +88,11 @@ class _ProductPageState extends State<ProductPage> {
                         ),
                       ),
                       child2: SizedBox(
-                        width: size.width > 1200 ? 600 :size.width > 600 ? size.width * .5 : size.width,
+                        width: size.width > 1200
+                            ? 600
+                            : size.width > 600
+                                ? size.width * .5
+                                : size.width,
                         child: Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Column(
@@ -120,7 +128,12 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                               const SizedBox(height: 16),
                               ElevatedButton(
-                                onPressed: () {
+                                onPressed: () async {
+                                  await productsProvider.getStoresByIds(product
+                                      .priceHistory
+                                      .map((history) => history.storeId)
+                                      .toList());
+
                                   setState(() {
                                     showOffersDialog(context, product);
                                   });
@@ -130,7 +143,10 @@ class _ProductPageState extends State<ProductPage> {
                               const SizedBox(height: 16),
                               NeumorphicButton(
                                 onPressed: () {
-                                  var product = productsProvider.products.where((product) => product.id == widget.productId).first;
+                                  var product = productsProvider.products
+                                      .where((product) =>
+                                          product.id == widget.productId)
+                                      .first;
                                   productsProvider.toggleFavorite(product);
                                   setState(() {
                                     isFavorite = !isFavorite;
@@ -201,29 +217,29 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   void showOffersDialog(BuildContext context, Product product) {
+    var stores = Provider.of<ProductsProvider>(context, listen: false).stores;
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Oferte disponibile'),
-          content: SingleChildScrollView(
-            child: Column(
-              children: List.generate(
-                product.priceHistory.length,
-                (index) {
-                  final price = product.priceHistory[index];
-                  final formattedDate =
-                      DateFormat('dd.MM.yyyy HH:mm').format(price.dateTime);
+          content: Container(
+            constraints: const BoxConstraints(minWidth: 500),
+            child: SingleChildScrollView(
+              child: Column(
+                children: List.generate(
+                  product.priceHistory.length,
+                  (index) {
+                    final price = product.priceHistory[index];
+                    final store =
+                        stores.firstWhere((store) => store.id == price.storeId);
 
-                  return ListTile(
-                    title: Text(
-                      'Preț: ${price.price.toStringAsFixed(2)} Lei',
-                    ),
-                    subtitle: Text(
-                      'Atualizat: $formattedDate',
-                    ),
-                  );
-                },
+                    return OfferCard(
+                      store: store,
+                      price: price,
+                    );
+                  },
+                ),
               ),
             ),
           ),
