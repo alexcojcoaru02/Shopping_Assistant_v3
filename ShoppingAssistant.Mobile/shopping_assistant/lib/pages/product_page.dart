@@ -116,7 +116,7 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                'Average Price: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
+                                'PRet mediu: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -124,7 +124,7 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                'Minimum Price: ${calculateMinimumPrice(product).toStringAsFixed(2)} Lei',
+                                'Pret minim: ${calculateMinimumPrice(product).toStringAsFixed(2)} Lei',
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -178,7 +178,7 @@ class _ProductPageState extends State<ProductPage> {
                                   var ids = product.priceHistory
                                       .map((history) => history.storeId)
                                       .toList();
-                                  await productsProvider.getStoresByIds(ids);
+                                  await productsProvider.getStores();
                                   showAddPriceDialog(context,
                                       productsProvider.stores, product.id);
                                 },
@@ -191,7 +191,7 @@ class _ProductPageState extends State<ProductPage> {
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'Price History',
+                      'Evolutia pretului',
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -278,10 +278,6 @@ class _ProductPageState extends State<ProductPage> {
         includePoints: true,
         includeArea: true,
         radiusPx: 3.0,
-        // labelAccessorFn: (charts.Series<dynamic, DateTime> series, int index) {
-        //   final price = series.data[index].price;
-        //   return price.toStringAsFixed(2);
-        // },
       ),
     );
   }
@@ -343,6 +339,9 @@ class _ProductPageState extends State<ProductPage> {
           ),
           actions: [
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryGreen,
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
               },

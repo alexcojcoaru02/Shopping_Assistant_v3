@@ -7,6 +7,8 @@ import 'package:shopping_assistant/providers/products_provider.dart';
 import 'package:shopping_assistant/widgets/product_sumary.dart';
 import 'package:shopping_assistant/widgets/responsive_layout.dart';
 
+import '../utils/configuration.dart';
+
 class AddReviewPage extends StatelessWidget {
   final String productId;
   final Review userReview;
@@ -27,12 +29,13 @@ class AddReviewPage extends StatelessWidget {
         TextEditingController(text: userReview.comment);
     int newRating = userReview.rating;
     String btnText = userReview.comment.isEmpty && userReview.rating == 0
-        ? 'Add Review'
-        : 'Edit Review';
+        ? 'Adauga review'
+        : 'Editeaza review';
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Review'),
+        backgroundColor: primaryGreen,
+        title: const Text('Adaugare review'),
       ),
       body: SingleChildScrollView(
         child: ResponsiveLayoutWidget(
@@ -117,6 +120,9 @@ class AddReviewPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryGreen,
+                    ),
                     onPressed: () {
                       if (newRating != userReview.rating ||
                           textController.text != userReview.comment) {

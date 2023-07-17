@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../models/store.dart';
+import '../utils/configuration.dart';
 
 class StorePage extends StatelessWidget {
   final Store store;
@@ -11,7 +12,8 @@ class StorePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(        
+        backgroundColor: primaryGreen,
         title: Text(store.name),
       ),
       body: Padding(

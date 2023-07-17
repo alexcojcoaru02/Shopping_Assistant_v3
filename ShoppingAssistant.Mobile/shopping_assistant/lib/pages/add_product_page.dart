@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shopping_assistant/providers/products_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/configuration.dart';
+
 class AddProductPage extends StatelessWidget {
   final String barcode;
 
@@ -46,6 +48,9 @@ class AddProductPage extends StatelessWidget {
             ),
             const SizedBox(height: 24.0),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryGreen,
+              ),
               onPressed: () {
                 String name = nameController.text;
                 double price = double.parse(priceController.text);

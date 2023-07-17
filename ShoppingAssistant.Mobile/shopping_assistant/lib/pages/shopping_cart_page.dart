@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/pages/store_page.dart';
 import 'package:shopping_assistant/widgets/list_item.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/product.dart';
 import '../models/store.dart';
 import '../providers/products_provider.dart';
+import '../utils/configuration.dart';
 
 class ShoppingCartPage extends StatelessWidget {
   const ShoppingCartPage({Key? key}) : super(key: key);
@@ -18,6 +20,7 @@ class ShoppingCartPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: primaryGreen,
         title: const Text('Shopping Cart'),
       ),
       body: Consumer<ProductsProvider>(
@@ -42,34 +45,32 @@ class ShoppingCartPage extends StatelessWidget {
               wishListProducts.isEmpty
                   ? const SizedBox.shrink()
                   : const Text(
-                      "Poti gasi majoritatea produselor la un pret avantajos la magazinul:",
+                      "Poti gasi majoritatea produselor la un pret avantajos in magazinul:",
                     ),
               SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(store.name),
-                  SizedBox(width: 16),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StorePage(store: store),
+              wishListProducts.isEmpty
+                  ? const SizedBox.shrink()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(store.name),
+                        SizedBox(width: 16),
+                        ElevatedButton(
+                          onPressed: () {
+                            _launchURL(store.location);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            backgroundColor: primaryGreen,
+                          ),
+                          child: const Text('Vizitează'),
                         ),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      ],
                     ),
-                    child: const Text('Vizitează'),
-                  ),
-                ],
-              ),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Text(
-                  'Average Total Price: ${calculeazatotal(wishListProducts).toStringAsFixed(2)}',
+                  'Pret mediu total: ${calculeazatotal(wishListProducts).toStringAsFixed(2)}',
                   style: const TextStyle(fontSize: 18),
                 ),
               ),
@@ -78,6 +79,13 @@ class ShoppingCartPage extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+void _launchURL(String address) async {
+  final url = Uri.parse(address);
+  if (!await launchUrl(url)) {
+    throw Exception('Could not launch $url');
   }
 }
 
