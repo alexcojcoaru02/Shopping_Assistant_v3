@@ -20,6 +20,12 @@ class ProductsProvider extends ChangeNotifier {
   List<Product> searchedProducts = [];
   String searchText = '';
   List<Store> stores = [];
+  Store store = Store(
+    id: '',
+    name: '',
+    address: 'Dummy Address',
+    location: 'Dummy Location',
+  );
   List<String> wishListProducts = [];
 
   static final ProductsProvider _instance = ProductsProvider._internal();
@@ -54,6 +60,29 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
+  Future<Store> getStore(String id) async {
+    if (id.isEmpty) {
+      return Store(
+        id: '',
+        name: 'Dummy Store',
+        address: 'Dummy Address',
+        location: 'Dummy Location',
+      );
+    }
+    final url = Uri.parse('https://alex-shopping-assistant.azurewebsites.net/api/store/id?id=$id');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final storeJson = jsonDecode(response.body);
+      store = Store.fromJson(storeJson);
+      notifyListeners();
+      return store;
+    } else {
+      throw Exception('Failed to get store');
+    }
+  }
+
   Future<void> getStoresByIds(List<String> ids) async {
     try {
       isLoading = true;
@@ -68,6 +97,7 @@ class ProductsProvider extends ChangeNotifier {
         stores = storesFromJson
             .map((storeJson) => Store.fromJson(storeJson))
             .toList();
+        stores = stores;
       } else {
         throw Exception('Failed to get stores by IDs');
       }
@@ -231,6 +261,45 @@ class ProductsProvider extends ChangeNotifier {
         Navigator.pushNamed(context, '/searchPage');
         notifyListeners();
       }
+    }
+  }
+
+  Future<List<dynamic>> getProductPriceHistory(String productId) async {
+    final url = Uri.parse('$_baseUrl/priceHistory?productId=$productId');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> priceHistoryData = jsonDecode(response.body);
+      return priceHistoryData;
+    } else {
+      throw Exception('Failed to fetch product price history');
+    }
+  }
+
+  Future<void> addPriceHistory(
+      String productId, PriceHistory priceHistory) async {
+    final url = Uri.parse('$_baseUrl/$productId/priceHistory');
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode(priceHistory.toJson());
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      getDataFromAPI();
+      notifyListeners();
+
+      Fluttertoast.showToast(
+        msg: "Price added successfully",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+    } else {
+      throw Exception('Failed to add price history');
     }
   }
 

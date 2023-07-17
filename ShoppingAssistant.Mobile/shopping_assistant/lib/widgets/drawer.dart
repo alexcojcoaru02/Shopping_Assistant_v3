@@ -5,6 +5,8 @@ import 'package:shopping_assistant/pages/profile_page.dart';
 import 'package:shopping_assistant/providers/auth_provider.dart';
 import 'package:shopping_assistant/widgets/profile_avatar.dart';
 
+import '../providers/products_provider.dart';
+
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
 
@@ -70,6 +72,13 @@ class _CustomDrawerState extends State<CustomDrawer> {
             leading: const Icon(Icons.favorite),
             title: const Text('Wishlist'),
             onTap: () {
+              var wishListProducts = ProductsProvider.instance.products
+                  .where((element) => ProductsProvider.instance.wishListProducts
+                      .contains(element.id))
+                  .toList();
+              String mostFrequentStoreId =
+                  findMostFrequentStoreId(wishListProducts);
+              ProductsProvider.instance.getStore(mostFrequentStoreId);
               Navigator.push(
                 context,
                 MaterialPageRoute(

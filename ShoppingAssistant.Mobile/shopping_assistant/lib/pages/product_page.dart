@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_assistant/widgets/no_reviews_widget.dart';
 import '../models/product.dart';
+import '../models/store.dart';
 import '../providers/products_provider.dart';
 import '../utils/configuration.dart';
+import '../widgets/add_price.dart';
 import '../widgets/eumorphic_button.dart';
 import '../widgets/offer_widget.dart';
 import '../widgets/rating_section.dart';
@@ -133,10 +136,10 @@ class _ProductPageState extends State<ProductPage> {
                                   backgroundColor: primaryGreen,
                                 ),
                                 onPressed: () async {
-                                  await productsProvider.getStoresByIds(
-                                      product.priceHistory
-                                          .map((history) => history.storeId)
-                                          .toList());
+                                  var ids = product.priceHistory
+                                      .map((history) => history.storeId)
+                                      .toList();
+                                  await productsProvider.getStoresByIds(ids);
 
                                   setState(() {
                                     showOffersDialog(context, product);
@@ -157,7 +160,30 @@ class _ProductPageState extends State<ProductPage> {
                                   });
                                 },
                                 isFavorite: isFavorite,
-                              )
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Daca ai gasit un pret mai bun, te rugam sa ne anunti!',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: primaryGreen,
+                                ),
+                                onPressed: () async {
+                                  var ids = product.priceHistory
+                                      .map((history) => history.storeId)
+                                      .toList();
+                                  await productsProvider.getStoresByIds(ids);
+                                  showAddPriceDialog(context,
+                                      productsProvider.stores, product.id);
+                                },
+                                child: const Text('Adauga pret'),
+                              ),
                             ],
                           ),
                         ),
@@ -203,25 +229,86 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   Widget buildPriceHistoryGraph(product) {
+    var montlyPriceHistory = calculateMonthlyAverages(product.priceHistory);
     List<charts.Series<PriceHistory, DateTime>> seriesList = [
       charts.Series<PriceHistory, DateTime>(
         id: 'Price',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
         domainFn: (PriceHistory price, _) => price.dateTime,
         measureFn: (PriceHistory price, _) => price.price,
-        data: product.priceHistory,
+        data: montlyPriceHistory,
       ),
     ];
 
+    final selectionModelConfig = charts.SelectionModelConfig(
+      changedListener: (charts.SelectionModel model) {
+        if (model.hasDatumSelection) {
+          final selectedDatum = model.selectedDatum.first;
+          final value = selectedDatum.datum.price;
+          final formattedDate =
+              DateFormat('yyyy-MM-dd').format(selectedDatum.datum.dateTime);
+
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Selected Price'),
+                content: Text(
+                    'Value: ${value.toStringAsFixed(2)}\nDate: $formattedDate'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Close'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      },
+    );
+    
     return charts.TimeSeriesChart(
       seriesList,
       animate: true,
       dateTimeFactory: const charts.LocalDateTimeFactory(),
+      defaultRenderer: charts.LineRendererConfig(
+        includePoints: true,
+        includeArea: true,
+        radiusPx: 3.0,
+        // labelAccessorFn: (charts.Series<dynamic, DateTime> series, int index) {
+        //   final price = series.data[index].price;
+        //   return price.toStringAsFixed(2);
+        // },
+      ),
     );
   }
 
   void showOffersDialog(BuildContext context, Product product) {
     var stores = Provider.of<ProductsProvider>(context, listen: false).stores;
+    if (stores == []) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Oferte disponibile'),
+            content:
+                Text("Nu există oferte disponibile pentru ${product.name}"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+      return;
+    }
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -235,8 +322,15 @@ class _ProductPageState extends State<ProductPage> {
                   product.priceHistory.length,
                   (index) {
                     final price = product.priceHistory[index];
-                    final store =
-                        stores.firstWhere((store) => store.id == price.storeId);
+                    final store = stores.firstWhere(
+                      (store) => store.id == price.storeId,
+                      orElse: () => Store(
+                        address: "Unknown",
+                        id: "No id",
+                        location: "Unknown",
+                        name: "Unknown",
+                      ),
+                    );
 
                     return OfferCard(
                       store: store,

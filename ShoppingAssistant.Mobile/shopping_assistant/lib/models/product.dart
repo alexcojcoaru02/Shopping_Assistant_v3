@@ -46,9 +46,17 @@ class PriceHistory {
   );
 
   PriceHistory.fromJson(Map<String, dynamic> json)
-      : price = json['price'] as double,
+    : price = (json['price'] is int) ? (json['price'] as int).toDouble() : json['price'] as double,
         storeId = json['storeId'] as String,
         dateTime = DateTime.parse(json['dateTime'] as String);
+
+  Map<String, dynamic> toJson() {
+    return {
+      'price': price,
+      'storeId': storeId,
+      'dateTime': dateTime.toIso8601String(),
+    };
+  }
 }
 
 class Review {
