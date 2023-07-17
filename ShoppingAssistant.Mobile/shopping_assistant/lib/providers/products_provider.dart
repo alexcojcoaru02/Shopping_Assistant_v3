@@ -60,6 +60,21 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getStores() async {
+    final url = Uri.parse(_baseForStores);
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final storesFromJson = jsonDecode(response.body) as List<dynamic>;
+      stores =
+          storesFromJson.map((storeJson) => Store.fromJson(storeJson)).toList();
+      stores = stores;
+    } else {
+      throw Exception('Failed to get store');
+    }
+  }
+
   Future<Store> getStore(String id) async {
     if (id.isEmpty) {
       return Store(
@@ -69,7 +84,8 @@ class ProductsProvider extends ChangeNotifier {
         location: 'Dummy Location',
       );
     }
-    final url = Uri.parse('https://alex-shopping-assistant.azurewebsites.net/api/store/id?id=$id');
+    final url = Uri.parse(
+        'https://alex-shopping-assistant.azurewebsites.net/api/store/id?id=$id');
 
     final response = await http.get(url);
 

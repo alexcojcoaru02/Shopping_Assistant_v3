@@ -3,6 +3,7 @@ import 'package:shopping_assistant/providers/products_provider.dart';
 
 import '../models/product.dart';
 import '../models/store.dart';
+import '../utils/configuration.dart';
 
 class AddPriceDialog extends StatefulWidget {
   final List<Store> stores;
@@ -22,8 +23,13 @@ class _AddPriceDialogState extends State<AddPriceDialog> {
   bool isValid = false;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     selectedStore = widget.stores.first.id;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Add Price'),
       content: Column(
@@ -70,6 +76,9 @@ class _AddPriceDialogState extends State<AddPriceDialog> {
       ),
       actions: <Widget>[
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: primaryGreen,
+          ),
           onPressed: isValid
               ? () {
                   final priceHistory = PriceHistory(
@@ -91,6 +100,9 @@ class _AddPriceDialogState extends State<AddPriceDialog> {
           child: const Text('Add'),
         ),
         ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 221, 24, 24),
+          ),
           onPressed: () {
             Navigator.pop(context);
           },

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_assistant/utils/configuration.dart';
 import 'package:shopping_assistant/widgets/responsive_layout.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../utils/configuration.dart';
 
 import '../models/product.dart';
 import '../models/store.dart';
@@ -65,15 +68,11 @@ class OfferCard extends StatelessWidget {
                 ),
                 child2: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => StorePage(store: store),
-                      ),
-                    );
+                    _launchURL(store.location);
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
+                    backgroundColor: primaryGreen,
                   ),
                   child: const Text('Vizitează'),
                 ),
@@ -83,5 +82,12 @@ class OfferCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+void _launchURL(String address) async {
+  final url = Uri.parse(address);
+  if (!await launchUrl(url)) {
+    throw Exception('Could not launch $url');
   }
 }

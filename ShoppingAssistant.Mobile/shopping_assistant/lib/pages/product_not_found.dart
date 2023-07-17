@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/configuration.dart';
+
 class ProductNotFoundPage extends StatelessWidget {
   final String barcode;
 
@@ -10,6 +12,7 @@ class ProductNotFoundPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xfff0f1f5),
       appBar: AppBar(
+        backgroundColor: primaryGreen,
         title: const Text('Produsul nu a fost găsit'),
       ),
       body: Center(

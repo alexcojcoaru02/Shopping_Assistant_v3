@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:shopping_assistant/providers/auth_provider.dart';
 import 'package:shopping_assistant/widgets/profile_avatar.dart';
 
+import '../utils/configuration.dart';
+
 class ProfilePage extends StatelessWidget {
   const ProfilePage({
     super.key,
@@ -12,7 +14,8 @@ class ProfilePage extends StatelessWidget {
     AuthProvider authProvider = AuthProvider();
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: AppBar(        
+        backgroundColor: primaryGreen,
         title: const Text('Profile'),
       ),
       body: Padding(

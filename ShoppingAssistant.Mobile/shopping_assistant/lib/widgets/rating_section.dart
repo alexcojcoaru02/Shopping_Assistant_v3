@@ -9,6 +9,7 @@ import 'package:shopping_assistant/widgets/review_sumary_widget.dart';
 
 import '../pages/add_review_page.dart';
 import '../providers/products_provider.dart';
+import '../utils/configuration.dart';
 
 class RatingSection extends StatefulWidget {
   final String productId;
@@ -36,9 +37,9 @@ class _RatingSectionState extends State<RatingSection> {
     );
     userName = AuthProvider().username;
     var reviews = productsProvider.products
-        .firstWhere((product) => product.id == widget.productId).reviews;
-    hasUserReviewed = reviews
-        .any((review) => review.userName == userName);
+        .firstWhere((product) => product.id == widget.productId)
+        .reviews;
+    hasUserReviewed = reviews.any((review) => review.userName == userName);
     userReview = productsProvider.products
         .firstWhere((product) => product.id == widget.productId)
         .reviews
@@ -58,7 +59,7 @@ class _RatingSectionState extends State<RatingSection> {
 
   @override
   Widget build(BuildContext context) {
-    String addEditButton = hasUserReviewed ? 'Edit Review' : 'Add Review';
+    String addEditButton = hasUserReviewed ? 'Editeaza review' : 'Adauga review';
     String addReviewIntro1 = hasUserReviewed
         ? 'Ai acordat ${userReview.rating} stele acestui produs'
         : 'Detii sau ai utilizat produsul?';
@@ -122,6 +123,9 @@ class _RatingSectionState extends State<RatingSection> {
                     ),
                     const SizedBox(height: 8),
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryGreen,
+                      ),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -209,7 +213,7 @@ Widget buildReviewitem(Review review, BuildContext context) {
           ),
         ),
         SizedBox(
-          width: width * 0.6- 12,
+          width: width * 0.6 - 12,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
