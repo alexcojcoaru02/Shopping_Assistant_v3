@@ -3,11 +3,15 @@ import 'package:flutter/material.dart';
 class ResponsiveLayoutWidget extends StatelessWidget {
   final Widget child1;
   final Widget child2;
+  final MainAxisAlignment mainAxisAlignment;
+  final CrossAxisAlignment crossAxisAlignment;
 
   const ResponsiveLayoutWidget({
     Key? key,
     required this.child1,
     required this.child2,
+    this.mainAxisAlignment = MainAxisAlignment.spaceEvenly,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
   }) : super(key: key);
 
   @override
@@ -16,7 +20,8 @@ class ResponsiveLayoutWidget extends StatelessWidget {
 
     if (screenWidth > 600) {
       return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: mainAxisAlignment,
+        crossAxisAlignment: crossAxisAlignment,
         children: [
           child1,
           child2,
@@ -24,6 +29,8 @@ class ResponsiveLayoutWidget extends StatelessWidget {
       );
     } else {
       return Column(
+        mainAxisAlignment: mainAxisAlignment,
+        crossAxisAlignment: crossAxisAlignment,
         children: [
           child1,
           child2,

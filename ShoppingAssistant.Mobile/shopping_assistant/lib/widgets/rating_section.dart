@@ -35,9 +35,9 @@ class _RatingSectionState extends State<RatingSection> {
       listen: false,
     );
     userName = AuthProvider().username;
-    hasUserReviewed = productsProvider.products
-        .firstWhere((product) => product.id == widget.productId)
-        .reviews
+    var reviews = productsProvider.products
+        .firstWhere((product) => product.id == widget.productId).reviews;
+    hasUserReviewed = reviews
         .any((review) => review.userName == userName);
     userReview = productsProvider.products
         .firstWhere((product) => product.id == widget.productId)

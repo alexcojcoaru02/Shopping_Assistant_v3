@@ -7,6 +7,11 @@ using System;
 
 namespace ShoppingAssistant.Api.Services
 {
+    public class PriceHistoryData
+    {
+        public double Price { get; set; }
+        public DateTime Month { get; set; }
+    }
     public class ProductService : IProductService
     {
         private const string ConnectionString = "mongodb://alex-shoping-assitant:y8czsQg2fOQKUKwBzpDzQ2KKL7dlrDQtCMoNpBjQLiwkm4zVGSVrRv1ekdpf98YONtXgO3cL05ZkACDbAsP6TQ==@alex-shoping-assitant.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@alex-shoping-assitant@";
@@ -51,9 +56,15 @@ namespace ShoppingAssistant.Api.Services
             return product;
         }
 
-        public List<double> GetProductPriceHistory(ObjectId id)
+        public void AddPriceHistory(string productId, PriceHistory priceHistory)
         {
-            var priceHistories = _productRepository.GetAllProducts().SelectMany(x => x.PriceHistory);
+            _productRepository.AddPriceHistory(productId, priceHistory);
+        }
+
+
+        public List<PriceHistoryData> GetProductPriceHistory(ObjectId id)
+        {
+            var priceHistories = _productRepository.GetProduct(id).PriceHistory;
 
             var oneYearAgo = DateTime.Now.AddYears(-1);
 
@@ -65,7 +76,7 @@ namespace ShoppingAssistant.Api.Services
 
             var result = monthlyPrices
                 .GroupBy(mp => mp.Month)
-                .Select(g => g.Average(mp => mp.AvgPrice))
+                .Select(g => new PriceHistoryData { Price = g.Average(mp => mp.AvgPrice), Month = g.Key})
                 .ToList();
 
 

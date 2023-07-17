@@ -5,16 +5,27 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shopping_assistant/models/product.dart';
 import 'package:http/http.dart' as http;
 
+import '../models/store.dart';
+
 class ProductsProvider extends ChangeNotifier {
+  final _baseForStores =
+      'https://alex-shopping-assistant.azurewebsites.net/api/store';
   final _baseUrl =
       'https://alex-shopping-assistant.azurewebsites.net/api/product';
-  final _baseUrlLocal = 'https://localhost:7014/api/product';
+  final _baseUrlLocal = 'https://localhost:7014/api/store';
 
   bool isLoading = true;
   String error = '';
   List<Product> products = [];
   List<Product> searchedProducts = [];
   String searchText = '';
+  List<Store> stores = [];
+  Store store = Store(
+    id: '',
+    name: '',
+    address: 'Dummy Address',
+    location: 'Dummy Location',
+  );
   List<String> wishListProducts = [];
 
   static final ProductsProvider _instance = ProductsProvider._internal();
@@ -43,6 +54,56 @@ class ProductsProvider extends ChangeNotifier {
       }
     } catch (e) {
       error = e.toString();
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<Store> getStore(String id) async {
+    if (id.isEmpty) {
+      return Store(
+        id: '',
+        name: 'Dummy Store',
+        address: 'Dummy Address',
+        location: 'Dummy Location',
+      );
+    }
+    final url = Uri.parse('https://alex-shopping-assistant.azurewebsites.net/api/store/id?id=$id');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final storeJson = jsonDecode(response.body);
+      store = Store.fromJson(storeJson);
+      notifyListeners();
+      return store;
+    } else {
+      throw Exception('Failed to get store');
+    }
+  }
+
+  Future<void> getStoresByIds(List<String> ids) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+      final queryParams = ids.map((id) => 'ids=$id').join('&');
+
+      final url = Uri.parse('$_baseForStores/list?$queryParams');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        final storesFromJson = jsonDecode(response.body) as List<dynamic>;
+        stores = storesFromJson
+            .map((storeJson) => Store.fromJson(storeJson))
+            .toList();
+        stores = stores;
+      } else {
+        throw Exception('Failed to get stores by IDs');
+      }
+    } catch (e) {
+      print('Error: $e');
+      stores = [];
     } finally {
       isLoading = false;
       notifyListeners();
@@ -203,6 +264,45 @@ class ProductsProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<dynamic>> getProductPriceHistory(String productId) async {
+    final url = Uri.parse('$_baseUrl/priceHistory?productId=$productId');
+
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> priceHistoryData = jsonDecode(response.body);
+      return priceHistoryData;
+    } else {
+      throw Exception('Failed to fetch product price history');
+    }
+  }
+
+  Future<void> addPriceHistory(
+      String productId, PriceHistory priceHistory) async {
+    final url = Uri.parse('$_baseUrl/$productId/priceHistory');
+
+    final headers = {
+      'Content-Type': 'application/json',
+    };
+
+    final body = jsonEncode(priceHistory.toJson());
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      getDataFromAPI();
+      notifyListeners();
+
+      Fluttertoast.showToast(
+        msg: "Price added successfully",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+    } else {
+      throw Exception('Failed to add price history');
+    }
+  }
+
   Future<Product> searchBaracode(String barcode) async {
     if (barcode.isEmpty) {
       return Product('', '', barcode, '', ProductCategory.beauty, '', [], []);
@@ -216,12 +316,11 @@ class ProductsProvider extends ChangeNotifier {
           final productJson = jsonDecode(response.body) as Map<String, dynamic>;
           return Product.fromJson(productJson);
         } else if (response.statusCode == 404) {
-          return Product('', '', barcode, '', ProductCategory.beauty, '', [],
-              []);
+          return Product(
+              '', '', barcode, '', ProductCategory.beauty, '', [], []);
         } else {
           throw Exception('Failed to load product');
         }
-        throw Exception('Failed to load product');
       } catch (e) {
         throw Exception(e.toString());
       } finally {

@@ -9,6 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../models/product.dart';
 import '../pages/add_product_page.dart';
+import '../pages/product_not_found.dart';
 import '../pages/product_page.dart';
 import '../providers/products_provider.dart';
 
@@ -169,7 +170,7 @@ Future<void> scanBarcode(BuildContext context) async {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => AddProductPage(barcode: barcodeScanRes),
+            builder: (context) => ProductNotFoundPage(barcode: barcodeScanRes),
           ),
         );
       }

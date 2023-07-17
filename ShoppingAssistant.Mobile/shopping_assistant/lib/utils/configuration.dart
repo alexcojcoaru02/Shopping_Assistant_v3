@@ -6,6 +6,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../models/product.dart';
 
 Color primaryGreen = const Color(0xff416d6d);
+LinearGradient gradient = const LinearGradient(colors: [
+  Color(0xff382743),
+  Color(0xffff4590),
+], stops: [
+  0.0,
+  1.0
+], begin: FractionalOffset.topLeft, end: FractionalOffset.bottomRight);
 List<BoxShadow> shadowList = [
   const BoxShadow(
       color: Color.fromRGBO(183, 181, 181, 1),
@@ -13,8 +20,7 @@ List<BoxShadow> shadowList = [
       offset: Offset(0, 10))
 ];
 
-const String googleApiKey = 
-        'AIzaSyCidZhqIwj8xB9zxErdA90Kxdt_gjpuOEI';
+const String googleApiKey = 'AIzaSyCidZhqIwj8xB9zxErdA90Kxdt_gjpuOEI';
 
 List<Map> categories = [
   {
@@ -94,4 +100,60 @@ double calculateMinimumPrice(product) {
     return minimumPrice;
   }
   return 0;
+}
+
+List<PriceHistory> calculateMonthlyAverages(
+    List<PriceHistory> priceHistoryList) {
+  Map<String, List<PriceHistory>> monthlyData = {};
+
+  for (PriceHistory priceHistory in priceHistoryList) {
+    String monthYearKey =
+        '${priceHistory.dateTime.year}-0${priceHistory.dateTime.month}-01';
+
+    if (monthlyData.containsKey(monthYearKey)) {
+      monthlyData[monthYearKey]!.add(priceHistory);
+    } else {
+      monthlyData[monthYearKey] = [priceHistory];
+    }
+  }
+
+  String? findMostFrequentStoreId(List<Product> products) {
+    Map<String, int> countMap = {};
+    int maxCount = 0;
+    String? mostFrequentStoreId;
+
+    for (var product in products) {
+      for (var priceHistory in product.priceHistory) {
+        String storeId = priceHistory.storeId;
+        countMap[storeId] = (countMap[storeId] ?? 0) + 1;
+        if (countMap[storeId]! > maxCount) {
+          maxCount = countMap[storeId]!;
+          mostFrequentStoreId = storeId;
+        }
+      }
+    }
+
+    return mostFrequentStoreId;
+  }
+
+  List<PriceHistory> monthlyAverages = [];
+  monthlyData.forEach((monthYearKey, priceHistoryList) {
+    double sum = 0.0;
+    for (PriceHistory priceHistory in priceHistoryList) {
+      sum += priceHistory.price;
+    }
+    double average = sum / priceHistoryList.length;
+
+    DateTime monthYear = DateTime.parse(monthYearKey);
+
+    PriceHistory monthlyAveragePrice = PriceHistory(
+      average,
+      priceHistoryList[0].storeId,
+      monthYear,
+    );
+
+    monthlyAverages.add(monthlyAveragePrice);
+  });
+
+  return monthlyAverages;
 }
