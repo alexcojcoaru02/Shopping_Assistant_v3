@@ -62,11 +62,32 @@ namespace ShoppingAssistant.Api.Controllers
             {
                 return NotFound();
             }
+
             Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
             var priceHistory = _productService.GetProductPriceHistory(ObjectId.Parse(productId));
 
             return priceHistory == null ? NotFound() : Ok(priceHistory);
+        }
+
+        [HttpPost("{productId}/priceHistory")]
+        public IActionResult AddPriceHistory(string productId, PriceHistory priceHistory)
+        {
+            Response.Headers.Add("Access-Control-Allow-Origin", "*");
+
+            if (!ObjectId.TryParse(productId, out _))
+            {
+                return BadRequest("Invalid ID format"); // Return 400 Bad Request response
+            }
+
+            if (!_productService.ProductExists(productId))
+            {
+                return NotFound();
+            }
+
+            _productService.AddPriceHistory(productId, priceHistory);
+
+            return Ok();
         }
 
         [HttpPost]

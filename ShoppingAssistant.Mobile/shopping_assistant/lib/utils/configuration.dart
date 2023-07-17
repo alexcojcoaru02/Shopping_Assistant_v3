@@ -6,6 +6,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../models/product.dart';
 
 Color primaryGreen = const Color(0xff416d6d);
+LinearGradient gradient = const LinearGradient(colors: [
+  Color(0xff382743),
+  Color(0xffff4590),
+], stops: [
+  0.0,
+  1.0
+], begin: FractionalOffset.topLeft, end: FractionalOffset.bottomRight);
 List<BoxShadow> shadowList = [
   const BoxShadow(
       color: Color.fromRGBO(183, 181, 181, 1),
@@ -13,8 +20,7 @@ List<BoxShadow> shadowList = [
       offset: Offset(0, 10))
 ];
 
-const String googleApiKey = 
-        'AIzaSyCidZhqIwj8xB9zxErdA90Kxdt_gjpuOEI';
+const String googleApiKey = 'AIzaSyCidZhqIwj8xB9zxErdA90Kxdt_gjpuOEI';
 
 List<Map> categories = [
   {

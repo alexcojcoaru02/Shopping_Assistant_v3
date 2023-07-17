@@ -252,7 +252,6 @@ class ProductsProvider extends ChangeNotifier {
         } else {
           throw Exception('Failed to load product');
         }
-        throw Exception('Failed to load product');
       } catch (e) {
         throw Exception(e.toString());
       } finally {

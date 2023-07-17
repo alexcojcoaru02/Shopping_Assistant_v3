@@ -15,6 +15,8 @@ namespace ShoppingAssistant.Api.Repositories.Interfaces
 
         public Product GetProductByBarcode(string barcode);
 
+        public void AddPriceHistory(string productId, PriceHistory priceHistory);
+
         public void UpdateProduct(Product product);
 
         public bool ProductExists(string productId);

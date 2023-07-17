@@ -10,23 +10,23 @@ namespace ShoppingAssistant.Api.Repositories
         private const string ConnectionString = "mongodb://alex-shoping-assitant:y8czsQg2fOQKUKwBzpDzQ2KKL7dlrDQtCMoNpBjQLiwkm4zVGSVrRv1ekdpf98YONtXgO3cL05ZkACDbAsP6TQ==@alex-shoping-assitant.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&replicaSet=globaldb&maxIdleTimeMS=120000&appName=@alex-shoping-assitant@";
         private const string DBName = "SATest";
         private const string CollectionName = "products";
-        private IMongoCollection<Product> productsCollection;
+        private IMongoCollection<Product> _productsCollection;
 
         public MongoClient MongoClient;
 
         public ProductRepository()
         {
-            productsCollection = new MongoClient(ConnectionString).GetDatabase(DBName).GetCollection<Product>(CollectionName);
+            _productsCollection = new MongoClient(ConnectionString).GetDatabase(DBName).GetCollection<Product>(CollectionName);
         }
 
         public List<Product> GetAllProducts()
-            => productsCollection.FindSync(_ => true).ToList();
+            => _productsCollection.FindSync(_ => true).ToList();
 
         public async Task AddProduct(Product product)
         {
             product.Id = ObjectId.GenerateNewId().ToString();
 
-            await productsCollection.InsertOneAsync(product);
+            await _productsCollection.InsertOneAsync(product);
         }
 
         public List<Product> GetProductsByHint(string hint)
@@ -35,14 +35,22 @@ namespace ShoppingAssistant.Api.Repositories
 
             var filter = Builders<Product>.Filter.Regex("Name", regexPattern);
 
-            return productsCollection.Find(filter).ToList();
+            return _productsCollection.Find(filter).ToList();
+        }
+
+        public void AddPriceHistory(string productId, PriceHistory priceHistory)
+        {
+            var filter = Builders<Product>.Filter.Eq("_id", ObjectId.Parse(productId));
+            var update = Builders<Product>.Update.Push("PriceHistory", priceHistory);
+
+            _productsCollection.UpdateOne(filter, update);
         }
 
         public Product GetProduct(ObjectId id)
-            => productsCollection.Find(Builders<Product>.Filter.Eq("_id", id)).FirstOrDefault();
+            => _productsCollection.Find(Builders<Product>.Filter.Eq("_id", id)).FirstOrDefault();
 
         public Product GetProductByBarcode(string barcode)
-            => productsCollection.Find(Builders<Product>.Filter.Eq("Barcode", barcode)).FirstOrDefault();
+            => _productsCollection.Find(Builders<Product>.Filter.Eq("Barcode", barcode)).FirstOrDefault();
 
         public void UpdateProduct(Product product)
         {
@@ -56,12 +64,12 @@ namespace ShoppingAssistant.Api.Repositories
                 .Set(p => p.PriceHistory, product.PriceHistory)
                 .Set(p => p.Reviews, product.Reviews);
 
-            productsCollection.UpdateOne(filter, update);
+            _productsCollection.UpdateOne(filter, update);
         }
         public bool ProductExists(string productId)
         {
             var filter = Builders<Product>.Filter.Eq(p => p.Id, productId);
-            var product = productsCollection.Find(filter).FirstOrDefault();
+            var product = _productsCollection.Find(filter).FirstOrDefault();
 
             return product != null;
         }
@@ -71,7 +79,7 @@ namespace ShoppingAssistant.Api.Repositories
             var filter = Builders<Product>.Filter.Eq(p => p.Id, productId);
             var update = Builders<Product>.Update.Push(p => p.Reviews, review);
 
-            productsCollection.UpdateOne(filter, update);
+            _productsCollection.UpdateOne(filter, update);
         }
     }
 }

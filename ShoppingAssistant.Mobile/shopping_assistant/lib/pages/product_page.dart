@@ -45,6 +45,7 @@ class _ProductPageState extends State<ProductPage> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: primaryGreen,
         title: Text(product.name),
       ),
       body: Consumer<ProductsProvider>(
@@ -128,11 +129,14 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                               const SizedBox(height: 16),
                               ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: primaryGreen,
+                                ),
                                 onPressed: () async {
-                                  await productsProvider.getStoresByIds(product
-                                      .priceHistory
-                                      .map((history) => history.storeId)
-                                      .toList());
+                                  await productsProvider.getStoresByIds(
+                                      product.priceHistory
+                                          .map((history) => history.storeId)
+                                          .toList());
 
                                   setState(() {
                                     showOffersDialog(context, product);
