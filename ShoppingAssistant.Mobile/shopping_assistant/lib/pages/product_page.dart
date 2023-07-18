@@ -116,7 +116,7 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                'PRet mediu: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
+                                'Pret mediu: ${calculateAveragePrice(product).toStringAsFixed(2)} Lei',
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
